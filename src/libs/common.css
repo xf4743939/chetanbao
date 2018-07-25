@@ -1,0 +1,41 @@
+ .btn{
+    width: 620rpx;
+    height: 90rpx;
+    border-radius: 45rpx;
+    background-image: linear-gradient(90deg, 
+		rgba(104, 169, 2, 0.54) 0%, 
+		rgba(178, 217, 75, 0.9) 100%), 
+	linear-gradient(
+		#61c000, 
+    #61c000);
+    background-blend-mode: normal,ormal;
+  }
+  .btn1{
+    width: 620rpx;
+    height: 90rpx;
+    border-radius: 45rpx;
+    background: #999;
+    color: #fff;
+  }
+  #codeBtn{
+    width: 210rpx;
+    height: 60rpx;
+    border-radius: 28rpx;
+    text-align: center;
+    line-height: 60rpx;
+    margin-right: 0;
+    font-size: 30rpx;         
+  }
+  .page_Wrap{
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height:100%;
+      box-sizing: border-box;
+      padding-left: 40rpx;
+      padding-right: 40rpx;
+  }
+/* 公共信息 活动一活动二*/
+
+
