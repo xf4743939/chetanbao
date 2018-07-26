@@ -2,7 +2,7 @@
     <div class="reward_container page_Wrap">
         <div class="reward_head" v-if="reduction">
             <div>
-                当前<span class="cur">{{reduction.totalCarbon}}</span>g,&nbsp;&nbsp;累计<span class="sum">{{ reduction.totalPollute }}</span>g
+                减排碳<span class="cur">{{reduction.totalCarbon}}</span>g&nbsp;,&nbsp;&nbsp;减排污染物<span class="sum ">{{ reduction.totalPollute }}</span>g
             </div>
         </div>
         <div class="reward_main wrap"  @touchstart='touchStart'            
@@ -324,8 +324,9 @@ export default {
               color: #333;
           }
           .sum{
-             font-size: 36rpx;
-             color: #999;
+              font-size: 36rpx;
+              font-weight: bold;
+              color: #333;
           }
       }
       .reward_main{

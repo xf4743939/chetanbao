@@ -14,7 +14,7 @@
                 </div>
                 <div class="item">
                     <span>设备邮寄地址</span>
-                    <span class="item_val">{{ payInfo.address }}</span>
+                    <span class="item_val " id="item_address">{{ payInfo.address }}</span>
                 </div>
                 <div class="item">
                     <span>押金提交方式</span>
@@ -125,7 +125,7 @@ export default {
           justify-content: space-between;
           align-items: center;
           .item_val{
-              color:#4eb248;
+              color:#4eb248;        
           }
           span:nth-of-type(2){
               width:320rpx;
@@ -134,7 +134,14 @@ export default {
               white-space: nowrap;
               text-overflow:ellipsis;
           }
+        
       }
+  }
+  #item_address{
+              width: 160px;
+              white-space:normal;
+             word-wrap:break-word;
+              max-height: 130px
   }
   .modal-footer {
     display: flex;

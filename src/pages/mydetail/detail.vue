@@ -53,7 +53,7 @@
             </a>
         </div>
         <div class="detail_footer">
-            <div class="footer_container" v-if="userInfo.gameListType==1">
+            <div class="footer_container" v-if="userInfo && userInfo.gameListType==1">
 
                        <div>
                           <img src="../../../static/images/footer.png" >
@@ -65,7 +65,7 @@
                         </div>
               
             </div> 
-             <div class="footer_container" v-if="userInfo.gameListType==2">
+             <div class="footer_container" v-if="userInfo && userInfo.gameListType==2">
 
                        <div>
                           <img style="width:56px;" src="../../../static/images/wifi.png" >
@@ -75,7 +75,7 @@
                             <p>设备激活需在车碳宝APP上进行</p>
                        </div>         
              </div> 
-            <div class="footer_container" v-if="userInfo.gameListType==2 && userInfo.wifiStatus==wifiStatus.Activate_Normal">
+            <div class="footer_container" v-if="userInfo && userInfo.gameListType==2 && userInfo.wifiStatus==wifiStatus.Activate_Normal">
                        <div>
                           <img style="width:56px;" src="../../../static/images/wify_active.png" >
                        </div>
@@ -90,28 +90,26 @@
 </template>
 <script>
 import { getCurrentLoginInfo,nextLoadPicDay} from '../../utils/api'
-import { mapState } from 'vuex';
+import { mapState,mapMutations } from 'vuex';
 import {wifiStatus} from '../../utils/constant'
 export default {
     data(){
         return{
            nextDay:0,
            wifiStatus:wifiStatus,
+           userInfo:null,
         }
     },
     computed: {
-      ...mapState(['userInfo'])
+    //   ...mapState(['userInfo'])
     },
     methods: {
+        ...mapMutations(['SAVEUSERINFO']),
        camer(){
-        
-           if(this.userInfo && this.userInfo.nextPicDay>0){
-               return;
-           }else{
-              wx.navigateTo({
+       
+           wx.navigateTo({
                   url:'/pages/odometer/odometer'
               })
-           }
        },
        detailInfo(index){
          
@@ -127,10 +125,18 @@ export default {
                url:url
            })
         },
-     
+       async getCurrentLoginInfo(){
+           let res=await getCurrentLoginInfo()
+           if(res && res.success){
+               this.userInfo=res.result
+               this.$store.commit(SAVEUSERINFO,res.result) 
+           }else{
+               this.$mptoast(res.error.message,'none',2000)
+           }
+       }
     },
     mounted () {
-       
+      this.getCurrentLoginInfo()
     }
 }
 </script>

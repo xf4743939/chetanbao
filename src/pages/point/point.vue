@@ -2,7 +2,7 @@
     <div class="reward_container page_Wrap">
         <div class="reward_head" v-if="carbon">
             <div>
-                当前<span class="cur">{{carbon.points}}</span>元,&nbsp;&nbsp;累计<span class="sum">{{ carbon.totalPoints }}</span>元
+                当前<span class="cur">{{carbon.points}}</span>个
             </div>
         </div>
         <div ref="btnImg" class="reward_main wrap"
@@ -17,7 +17,7 @@
             <ul>
                 <li v-if="detail.items.length>0" class="item_li" v-for="(item,index) in detail.items" :key="index">
                     <div class="item">
-                        <div class="item1">停车获得</div>
+                        <div class="item1">停驾减排</div>
                         <div class="item2">{{ item.date}}</div>
                     </div>
                     <div class="item3">
@@ -139,7 +139,8 @@ export default {
          .then(request.spread(function(a,b,c){
               that.carbon=a.result;
               that.draw=b.result;
-              that.detail=c.result;        
+              that.detail=c.result; 
+               
               that.initChart(that.draw.items)
          }))
       },

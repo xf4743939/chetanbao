@@ -18,7 +18,7 @@
 </template>
 <script>
 import { gameListType} from '../../utils/constant'
-import {mapState} from 'vuex'
+import {mapState,mapMutations} from 'vuex'
 export default {
     data(){
         return{
@@ -27,18 +27,20 @@ export default {
         }
     },
     computed: {
-      ...mapState(['isLogin','userInfo'])  
+      ...mapState(['isLogin','userInfo',])  
     },
     methods: {
-   
+      ...mapMutations(['UPDATETYPE']),
+      
         join(){ 
                if(this.disabled){
                 return ;
-               }     
+               } 
+                 this.$store.commit('UPDATETYPE',1)        
                if(!this.isLogin){
                   this.$router.push({path:'/pages/login/login'})
                }else{
-                  this.$router.push({path:'/pages/carplate/carplate?type=1'}) 
+                  this.$router.push({path:'/pages/carplate/carplate'}) 
                }
         },
         getData(){

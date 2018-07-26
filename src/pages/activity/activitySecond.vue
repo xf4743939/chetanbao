@@ -20,7 +20,7 @@
 <script>
 
 import { gameListType} from '../../utils/constant'
-import {mapState} from 'vuex'
+import {mapState,mapMutations} from 'vuex'
 
 export default {
     data(){
@@ -30,17 +30,19 @@ export default {
         }
     },
     computed:{
-      ...mapState(['isLogin','userInfo'])  
+      ...mapState(['isLogin','userInfo','type'])  
     },
     methods: {
+        ...mapMutations(['UPDATETYPE']),
         join(){  
             if(this.disabled){
                 return ;
-            }     
+            }
+             this.$store.commit('UPDATETYPE',2)     
              if(!this.isLogin){
                   this.$router.push({path:'/pages/login/login'})
              }else{
-                  this.$router.push({path:'/pages/carplate/carplate?type=2'}) 
+                  this.$router.push({path:'/pages/carplate/carplate'}) 
              }
         },
           getData(){

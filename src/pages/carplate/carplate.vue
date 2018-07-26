@@ -16,18 +16,18 @@
 </template>
 <script>
 import {mapState,mapMutations} from 'vuex'
-import {updateCarBLInfoByMe} from '../../utils/api'
+import {updateCarBLInfoByMe,getCurrentLoginInfo} from '../../utils/api'
 
 import mptoast from 'mptoast'
 export default {
     data(){
         return {
-             type:0, //1.表示活动1,2.表示活动二
+    
              cardNo:''
         }
     },
     computed: {
-        ...mapState(['city','userInfo'])
+        ...mapState(['city','userInfo','type'])
     },
     components: {
       mptoast  
@@ -44,14 +44,17 @@ export default {
             let data={
                 carNo:carNoText
             }
+            
             if(this.type==1) {
+
                   let res= await updateCarBLInfoByMe(data)
-                    if(res && res.success){
-                           
+                    if(res && res.success){ 
+                         this.$store.state.userInfo.carNo=carNoText;
                             wx.reLaunch({
-                            url:'/pages/mydetail/detail'
-                        })
+                                  url:'/pages/mydetail/detail'
+                               })                      
                     }else{
+                       
                         this.$mptoast(res.error.message,'error',2000)
                     }     
             }else{
@@ -67,20 +70,12 @@ export default {
               this.cardNo=this.userInfo.carNo.substring(2)
           }
         },
-        //根据地质栏判断活动一活动er
-        getType(){
-            let type=parseInt(this.$route.query.type)
-            if(!type){
-                this.type=0
-               
-            }else(
-                 this.type=type
-            )
-        }
+      
     },
     mounted () {
+       
         this.initData()
-        this.getType()
+    
     }
     
 }

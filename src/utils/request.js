@@ -50,7 +50,11 @@ request.interceptors.request.use((request) => {
               })
            }
          })
-         break; 
+         break;
+         case 404 :
+         wx.removeStorageSync('authToken')
+         wx.removeStorageSync('userInfo')
+         break;
       }
       return promise.resolve()
     }

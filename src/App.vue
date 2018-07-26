@@ -1,6 +1,6 @@
 
 <script>
-import {mapState,mapMutations,actions, mapActions} from 'vuex' 
+import {mapState,mapMutations, mapActions} from 'vuex' 
 import {LOGINSTATUS,SAVEUSERINFO} from './store/index'
 import { getCurrentLoginInfo} from '../src/utils/api'
 export default {
@@ -23,8 +23,9 @@ export default {
          let res = await getCurrentLoginInfo()
          if(res && res.success){
               let userInfo=res.result;
-               this.goToUrl(userInfo)
-              this.$store.commit('SAVEUSERINFO',userInfo)
+                this.$store.commit('SAVEUSERINFO',userInfo)
+                this.goToUrl(userInfo)
+            
          }else {
             wx.showToast({
               title:res.error.message,

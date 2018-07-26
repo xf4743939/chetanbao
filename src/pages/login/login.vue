@@ -14,27 +14,27 @@
             </div>     
             <div class="weui-cells_form" v-if="loginOrRegister">
                 <div class="weui-cell">
-                        <input class="weui-input" type="tel"  v-model="loginForm.phoneNumber"   placeholder="输入手机号码"/>
+                        <input class="weui-input" type="tel" @change="isDisable"  v-model="loginForm.phoneNumber"   placeholder="输入手机号码"/>
                 </div>
                 <div class="weui-cell">
-                        <input type="password" class="weui-input" v-model="loginForm.password"  placeholder="输入登录密码"/>  
+                        <input type="password" class="weui-input" @change="isDisable" v-model="loginForm.password"  placeholder="输入登录密码"/>  
                 </div>
                 <div class="weui-cell">
 
                 </div>
                  <div class="btn_wrap">
-                    <button class="btn" type="primary" @click="login">登录</button>
+                    <button class="btn1" v-bind:disabled="disableLoginBtn" :class="disableLoginBtn ? 'disBtn' : 'activeCode' "  @click="login">登录</button>
                  </div>   
             </div>  
             <div class="weui-cells_form" v-else>
                 <div class="weui-cell">
-                        <input class="weui-input" type="tel" v-model="register.phoneNumber" placeholder="输入手机号码"/>
+                        <input class="weui-input" type="tel" @change="disable" v-model="register.phoneNumber" placeholder="输入手机号码"/>
                 </div>
                 <div class="weui-cell">
-                        <input type="password" class="weui-input" v-model="register.password" placeholder="输入注册密码"/>  
+                        <input type="password" class="weui-input"  @change="disable" v-model="register.password" placeholder="输入注册密码"/>  
                 </div>
                 <div class="weui-cell code_wrap">
-                   <input type="text" class="weui-input" v-model="register.code" placeholder="输入验证码"/>
+                   <input type="text" class="weui-input" @change="disable" v-model="register.code" placeholder="输入验证码"/>
                    <button class="btn1" :class="currentTime==61 ? 'activeCode': 'disBtn' "  id="codeBtn"  @click="getVerificationCode" v-bind:disabled="currentTime<61">{{time}}</button>
                 </div>
                 <div class="weui-cell">
@@ -52,7 +52,7 @@
                   <div class="rules"><span>同意《</span><a style="color:#4eb248;" href="/pages/terms/terms">使用条款及隐私</a><span>》</span></div>
                 </div>        
                  <div class="btn_wrap">
-                    <button class="btn" type="primary" @click="login">注册</button>
+                    <button class="btn1" v-bind:disabled="disableRegisterBtn" :class="disableRegisterBtn ? 'disBtn' : 'activeCode' "  @click="login">注册</button>
                  </div>   
             </div>          
         </div>
@@ -63,17 +63,21 @@ import { reqister,smsSend,authenticate,getCurrentLoginInfo} from '../../utils/ap
 import { SAVEUSERINFO,LOGINSTATUS } from '../../store/index'
 import mptoast from 'mptoast'
 import showModal from '../../components/showModal'
-import '../../utils/md5'
+
+const md5=require('md5')
+
 export default {
     data(){
         return{
-            checked:true,
+            checked:false,
             loginOrRegister:true,
             register:{},
             isShow:false,
             time:'验证码',//倒计时
             currentTime:61,
             loginForm:{},
+            disableLoginBtn:true,
+            disableRegisterBtn:true,
             interval:null, //定时器 
          }
         
@@ -93,19 +97,23 @@ export default {
         isRegister(){  
           const myreg=/^[1][3,4,5,7,8][0-9]{9}$/; 
           if(!this.register.phoneNumber || this.register.phoneNumber.length===0){ 
-              this.$mptoast('手机号码为空','none',2000)
+              this.$mptoast('请输入手机号码','none',2000)
               return false;
           }
           if(!myreg.test(this.register.phoneNumber)){
-               this.$mptoast('请输入正确的手机格式','none',2000)
+               this.$mptoast('您输入的手机号码格式不正确请重新输入','none',2000)
                return false;
           }
-          if(!this.register.password || this.register.password.length===0){
-               this.$mptoast('密码为空','none',2000)
+          if(!this.register.password || this.register.password.length<6){
+               this.$mptoast('密码长度为6~18位','none',2000)
+               return false;
+          }
+         if(!this.register.password || this.register.password.length>18){
+               this.$mptoast('密码长度为6~18位','none',2000)
                return false;
           }
           if(!this.register.code || this.register.password.code===0){
-              this.$mptoast('验证码为空','none',2000)
+              this.$mptoast('请输入验证码','none',2000)
               return false;
           }
           if(!this.checked){
@@ -116,17 +124,18 @@ export default {
         },
         isLogin(){
              if(!this.loginForm.phoneNumber || this.loginForm.phoneNumber.length===0){ 
-              this.$mptoast('手机号码为空','none',2000)
+              this.$mptoast('账号或密码错误','none',2000)
               return false;
            }
           if(!this.loginForm.password || this.loginForm.password.length===0){
-               this.$mptoast('密码为空','none',2000)
+               this.$mptoast('账号或密码错误','none',2000)
                return false;
           }
           return true
         },
         checkboxChange(){
             this.checked=!this.checked
+            this.disable()
         },
         btnclick(login){
            this.loginOrRegister=login
@@ -161,6 +170,7 @@ export default {
         }
      },
        async login(){
+         const that=this;
               if(!this.loginOrRegister){
                   //注册逻辑
                         if(this.isRegister())
@@ -179,17 +189,24 @@ export default {
                             this.$mptoast(res.error.message,'error',2000)
                         }        
                  }
-              }else{             
+              }else{    
+                   
                   //登陆逻辑
                  if(this.isLogin()){
-                        
-                        let password=this.loginForm.phoneNumber.MD5(32).toUpperCase();
+
+                    
+                       let str=md5(that.loginForm.password)
+                       let password=str.toUpperCase()
+    
                          let data={
                             phoneNumber:this.loginForm.phoneNumber,
                             password:password,
                             loginType:10  //web登录
                         } 
-                        let ret = await authenticate(data)           
+                    
+                       
+                        let ret = await authenticate(data)    
+                      
                         if(ret && ret.success){
                            try{
                                wx.setStorageSync("authToken",ret.result);
@@ -208,11 +225,11 @@ export default {
       async getCode(){
           const myreg=/^[1][3,4,5,7,8][0-9]{9}$/;    
           if(!this.register.phoneNumber || this.register.phoneNumber.length===0){ 
-              this.$mptoast('手机号码为空','none',2000)
+              this.$mptoast('请输入手机号码','none',2000)
               return false;
           }
           if(!myreg.test(this.register.phoneNumber)){
-               this.$mptoast('请输入正确的手机格式','none',2000)
+               this.$mptoast('您输入的手机号码格式不正确请重新输入','none',2000)
                return false;
           }
      
@@ -243,15 +260,50 @@ export default {
       },
       getVerificationCode(){
           this.getCode() 
+      },
+      isDisable(){
+       
+          if(!this.loginForm || Object.keys(this.loginForm).length==0){
+              this.disableLoginBtn=true
+          }else{
+              if(this.loginForm.phoneNumber && this.loginForm.phoneNumber.length>0 && this.loginForm.password && this.loginForm.password.length>0){
+                  this.disableLoginBtn=false
+              }else{
+                  this.disableLoginBtn=true
+              }
+          }   
+      },
+      //注册按钮
+      disable(){
+       
+      
+        if(Object.keys(this.register).length){
+        
+           if(this.register.phoneNumber && this.register.phoneNumber.length>0 && this.register.password && this.register.password.length>0 && this.register.code && this.register.code.length>0 && this.checked){
+               this.disableRegisterBtn=false
+              
+           }else{
+            
+               this.disableRegisterBtn=true
+           }
+        }else{
+            this.disableRegisterBtn=true
+        }
+       
+           
+         
       }
     },
+ 
     mounted () {
+       
          this.refreshData(); 
     } 
 }
 </script>
 <style lang="less" scoped>
 .activeCode{
+      color: #fff;
       background-image: linear-gradient(90deg, 
 		rgba(104, 169, 2, 0.54) 0%, 
 		rgba(178, 217, 75, 0.9) 100%), 

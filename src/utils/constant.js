@@ -1,6 +1,6 @@
 
 //地址
-export const baseUrl="http://www.chetanlian.com";
+export const baseUrl="https://www.chetanlian.com";
 
 export const gameListType={
    no:0, //没有活动

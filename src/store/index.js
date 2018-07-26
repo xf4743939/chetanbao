@@ -3,13 +3,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { GETPROVINCE,GETCITY,LOGINSTATUS,SAVEUSERINFO,
-  SAVECARNO,SAVESCHEM,SAVEADDRESS,SAVECHOICETYPE} from './mutation-type'
+  SAVECARNO,SAVESCHEM,SAVEADDRESS,SAVECHOICETYPE,UPDATETYPE} from './mutation-type'
 import {getCurrentLoginInfo} from '../../src/utils/api'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+     type:1, //活动一 活动二
      city:'粤B',
      isLogin:false,
      userInfo:null,
@@ -25,7 +26,6 @@ const store = new Vuex.Store({
        state.city=city
      },
      [LOGINSTATUS](state,status){
-  
         state.isLogin=status
      },
      [SAVEUSERINFO](state,info){  
@@ -33,6 +33,7 @@ const store = new Vuex.Store({
        if(!state.isLogin){
          return
        }
+     
        state.userInfo=info
      },
      [SAVECARNO](state,carNo){
@@ -47,6 +48,9 @@ const store = new Vuex.Store({
      [SAVECHOICETYPE](state,payload){
        state.gameFeeChoiceType=payload.type
        state.fee=payload.fee
+     },
+     [UPDATETYPE](state,type){
+       state.type=type
      }
   },
   actions:{

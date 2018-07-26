@@ -1,10 +1,10 @@
 <template>
-    <div class="odometer page_Wrap">
+    <div class="odometer ">
        <mptoast/>
        <mileage-modal v-if="isShow" :isShow="isShow"  v-on:hideModal="hideModal" :mileages="modalVal"></mileage-modal>
       <div class="odometer_head">
           <div style="width:85px;">输入里程表</div>
-          <div style="width:150px;"><input type="text" class="weui-input" placeholder="输入里程表数值" v-model="number"></div>
+          <div style="width:150px;"><input type="number"  max="999999" min="0" maxlength="6" placeholder="输入里程表数值" v-model="number"></div>
           <div style="width:50ox;">公里</div>         
       </div>
        <div v-if="imgUrl.length>0" class="odometr_img">
@@ -16,8 +16,10 @@
                   <span @click="save">确认上传</span>
            </div>        
       </div>
+       
       <div v-else  class="odometr_main" @click="authorize">
-          <span>点击拍摄里程表照片</span>
+          <span v-if="userInfo && userInfo.nextPicDay==0">点击拍摄里程表照片</span>
+          <span v-if="userInfo && userInfo.nextPicDay>0">距离可拍照时间{{ userInfo.nextPicDay }}天</span>
       </div>
       <div class="odometerList" v-if="mileages" v-for="(item,index) in mileages" :key="index">
           <div class="odometer_info">
@@ -36,12 +38,13 @@
     </div>
 </template>
 <script>
-import { createMileage,getMileageListByFilter} from '../../utils/api'
+import { createMileage,getMileageListByFilter,nextLoadPicDay} from '../../utils/api'
 import {uploadFile} from '../../utils/wechat'
 import { baseUrl } from '../../utils/constant'
 import enums from '../../utils/enum'
 import mptoast from 'mptoast'
 import mileageModal from '../../components/mileageModal'
+import{mapState} from 'vuex'
 export default {
     data(){
         return {
@@ -60,6 +63,9 @@ export default {
       mptoast,
       mileageModal  
     },
+    computed: {
+      ...mapState(['userInfo'])  
+    },
     methods: {
         hideModal(){
             this.isShow=false;     
@@ -68,9 +74,20 @@ export default {
             this.modalVal=this.mileages[0];
            this.isShow=true;
         },
+        async nextLoadPicDay(){
+            let res=await nextLoadPicDay()
+            if(res && res.success){
+                  debugger
+            }else{
+               this.$mptoast(res.error.message,'none',2000)
+            }
+        },
         //调取摄像头拍照
         authorize(){
             const that=this
+           if(this.userInfo && this.userInfo.nextPicDay>0){
+               return;
+           } 
            wx.chooseImage({
             count:1,
             sizeType:['original','compressed'],
@@ -92,7 +109,7 @@ export default {
                })       
                return;
            }
-        
+          that.$mptoast('正在上传请稍后...','none',2000)
            wx.uploadFile({
                 url:baseUrl + enums.uploadMileageImg,
                 filePath: that.imgUrl, 
@@ -132,6 +149,8 @@ export default {
         
            if(res && res.success){
                this.imgUrl='';
+               this.number='';
+              this.$mptoast('上传成功','none',2000)
                this.getMileageListByFilter()
            }else{
                this.$mptoast(res.error.message,'none',2000)
@@ -160,18 +179,25 @@ export default {
         }
     },
     mounted () {
+       console.log(this.userInfo)
         this.getMileageListByFilter();
     }
 }
 </script>
 <style lang="less" scoped>
   .odometer{
+      position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        box-sizing:border-box;
        padding-left: 0;
        padding-right: 0;
       .odometerList{
         padding-left: 40rpx;
         padding-right: 40rpx;
-        margin-bottom: 10px;
+        margin-bottom: 25px;
         .odometer_info{
             display: flex;
             display: -webkit-flex;
@@ -214,7 +240,7 @@ export default {
       }
       .odometr_img{
           width:670rpx;
-          height:400rpx;     
+          height:300px;     
           margin: 40rpx auto 0 auto;
           margin-bottom: 0rpx;
           .btns{
