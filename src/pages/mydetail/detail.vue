@@ -1,6 +1,6 @@
 <template>
     <div class="detail_wrap ">  
-   <img class="top" v-if="false" src="../../../static/images/top.png" >
+  
         <div class="detail_bd">     
               <img src="../../../static/images/detail_bd.png" >
         </div>
@@ -11,7 +11,8 @@
             <div class="info_main">
                 <div class="info_item" @click="detailInfo(1)">
                     <p class="item_num" >
-                        <span>{{ userInfo.cMoney }}</span>
+                        <span>{{ userInfo.cMoney  }}</span>
+                      
                         <span>元</span>
                     </p>
                     <p class="item_name">
@@ -36,7 +37,8 @@
                               <span style="color:#999;">碳</span>
                         </div>
                         <div>
-                          <span style="margin-right:10rpx;">{{ userInfo.cPollute }}</span>
+                          <span style="margin-right:10rpx;">{{ userInfo.cPollute | format }}</span>
+                       
                           <span style="color:#999">污染物</span>
                         </div>                
                     </p>
@@ -98,12 +100,42 @@ export default {
            nextDay:0,
            wifiStatus:wifiStatus,
            userInfo:null,
+           
         }
     },
+  
     computed: {
     //   ...mapState(['userInfo'])
     },
     methods: {
+        filters(userInfo){
+           
+           if(parseInt(userInfo.cMoney)>=0){
+               userInfo.cMoney=userInfo.cMoney.toFixed(2)
+           }
+           if(parseInt(userInfo.cReduction)>0){
+                let arr=userInfo.cReduction.toFixed(2).split('.')
+                let a=arr[0],b=arr[1];
+                let num
+                if(a && a.length>3 && a.length<7){
+                    num=(a/1000).toFixed(2) + "kg"
+                }else if(a && a.length>=7){
+                 num=(a/1000).toFixed(2) + "t"
+                }
+                userInfo.cReduction=num
+           }
+           if(parseInt(userInfo.cPollute)>0){
+                let arr=userInfo.cPollute.toFixed(2).split('.')
+                let a=arr[0],b=arr[1];
+                let num
+                if(a && a.length>3 && a.length<7){
+                    num=(a/1000).toFixed(2) + "kg"
+                }else if(a && a.length>=7){
+                 num=(a/1000).toFixed(2) + "t"
+                }
+                userInfo.cPollute=num
+           }
+        },
         ...mapMutations(['SAVEUSERINFO']),
        camer(){
        
@@ -129,6 +161,7 @@ export default {
            let res=await getCurrentLoginInfo()
            if(res && res.success){
                this.userInfo=res.result
+                this.filters(this.userInfo)
                this.$store.commit(SAVEUSERINFO,res.result) 
            }else{
                this.$mptoast(res.error.message,'none',2000)

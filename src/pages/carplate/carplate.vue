@@ -6,7 +6,7 @@
                 <a href="/pages/province/province">{{ city }}</a>
              </div>
              <div class="weui-cell__bd">
-                <input type="text" v-model="cardNo" focus="true" class="weui-input">
+                <input type="text" maxlength="6" v-model="cardNo" focus="true" class="weui-input">
              </div>
        </div>
         <div class="btn_wrap">
@@ -42,14 +42,14 @@ export default {
            }       
             let carNoText=this.city + this.cardNo;           
             let data={
-                carNo:carNoText
+                carNo:carNoText.toUpperCase()
             }
             
             if(this.type==1) {
 
                   let res= await updateCarBLInfoByMe(data)
                     if(res && res.success){ 
-                         this.$store.state.userInfo.carNo=carNoText;
+                         this.$store.state.userInfo.carNo=carNoText.toUpperCase();
                             wx.reLaunch({
                                   url:'/pages/mydetail/detail'
                                })                      
@@ -58,8 +58,8 @@ export default {
                         this.$mptoast(res.error.message,'error',2000)
                     }     
             }else{
-                 this.$store.commit('SAVECARNO',carNoText)
-                 wx.setStorageSync('carNo',carNoText)
+                 this.$store.commit('SAVECARNO',carNoText.toUpperCase())
+                 wx.setStorageSync('carNo',carNoText.toUpperCase())
                  this.$router.push({path:'/pages/reduction/reduction'}) 
             }
         },

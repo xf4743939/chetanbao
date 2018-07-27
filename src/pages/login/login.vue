@@ -14,7 +14,7 @@
             </div>     
             <div class="weui-cells_form" v-if="loginOrRegister">
                 <div class="weui-cell">
-                        <input class="weui-input" type="tel" @change="isDisable"  v-model="loginForm.phoneNumber"   placeholder="输入手机号码"/>
+                        <input class="weui-input" type="tel" maxlength="11" @change="isDisable"  v-model="loginForm.phoneNumber"   placeholder="输入手机号码"/>
                 </div>
                 <div class="weui-cell">
                         <input type="password" class="weui-input" @change="isDisable" v-model="loginForm.password"  placeholder="输入登录密码"/>  
@@ -28,7 +28,7 @@
             </div>  
             <div class="weui-cells_form" v-else>
                 <div class="weui-cell">
-                        <input class="weui-input" type="tel" @change="disable" v-model="register.phoneNumber" placeholder="输入手机号码"/>
+                        <input class="weui-input" type="tel" maxlength="11" @change="disable" v-model="register.phoneNumber" placeholder="输入手机号码"/>
                 </div>
                 <div class="weui-cell">
                         <input type="password" class="weui-input"  @change="disable" v-model="register.password" placeholder="输入注册密码"/>  
@@ -230,6 +230,10 @@ export default {
           }
           if(!myreg.test(this.register.phoneNumber)){
                this.$mptoast('您输入的手机号码格式不正确请重新输入','none',2000)
+               return false;
+          }
+            if(!this.register.password || this.register.password.length<6){
+               this.$mptoast('密码长度为6~18位','none',2000)
                return false;
           }
      

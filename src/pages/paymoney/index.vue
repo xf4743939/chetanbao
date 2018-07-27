@@ -113,7 +113,7 @@ export default {
                 const carNo=wx.getStorageSync('carNo')   
                 if(carNo){
                      this.$store.state.carNo=carNo
-                     console.log(this.carNo)
+                  
                 }
             }
               if(!this.schem){
@@ -149,7 +149,7 @@ export default {
                 fee:that.fee,
                 gameFeeChoiceType:that.gameFeeChoiceType,
                 address:that.address,
-                carNo:that.carNo,
+                carNo:that.carNo.toUpperCase(),
                 gameFeePayType:that.gameFeePayType
             }
             this.isShow=true

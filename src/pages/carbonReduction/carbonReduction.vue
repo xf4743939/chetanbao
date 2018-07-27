@@ -98,19 +98,27 @@ export default {
                 if(this.disX>0){
                      if(this.drawPage<=1){
                         this.drawPage=1
-                        wx.showToast({
-                            title: '已是最新数据了..',
-                            icon: 'none',
-                            duration: 2000
+                        if(this.detail.items.length){
+                              wx.showToast({
+                                title: '已是最新数据了..',
+                                icon: 'none',
+                                duration: 2000
                             })
+                        }
+                       
                     }else{
                        this.drawPage--
-                       this.getDetailWithReduction(this.drawPage,this.drawNum)         
+                       if(this.detail.items.length){
+                         this.getDetailWithReduction(this.drawPage,this.drawNum)    
+                       }
+                           
                     }                  
                    
                 }else{
-                     this.drawPage++;                 
-                     this.getDetailWithReduction(this.drawPage,this.drawNum)
+                     this.drawPage++; 
+                       if(this.detail.items.length){
+                         this.getDetailWithReduction(this.drawPage,this.drawNum)    
+                       }
                 }  
          
     },
