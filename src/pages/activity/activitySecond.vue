@@ -42,7 +42,7 @@ export default {
              if(!this.isLogin){
                   this.$router.push({path:'/pages/login/login'})
              }else{
-                 if(this.userInfo && this.userInfo.carNo.length){
+                 if(this.userInfo && this.userInfo.carNo && this.userInfo.carNo.length){
                     this.$router.push({path:'/pages/reduction/reduction'}) 
                  }else{
                    this.$router.push({path:'/pages/carplate/carplate'}) 

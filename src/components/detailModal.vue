@@ -39,6 +39,7 @@
 </template>
 <script>
 import { applyGameTwo } from '../utils/api'
+const md5=require('md5')
 
 export default {
     data(){
@@ -65,10 +66,42 @@ export default {
             let data=this.payInfo
             let res= await applyGameTwo(data)
             if(res && res.success){
-                this.hideModal()
-                wx.reLaunch({
-                    url:'/pages/mydetail/detail'
-                })
+                let data=JSON.parse(res.result);
+                let appid=data.appid
+                let timestamp=''+ data.timestamp
+                let nonceStr=  data.noncestr
+                let packages='prepay_id='+ data.prepayid
+                let keys="gS8NoVGODkOCtuEisN8ZmN6qeSbSF4y9";
+                const str=`appid=${appid}&nonceStr=${nonceStr}&package=prepay_id=${data.prepay_id}&signType=MD5&timeStamp${timestamp}&key=${keys}`
+                let paysign=md5(str).toUpperCase()     
+                console.log(paysign)          
+                wx.requestPayment({
+                    'timeStamp':timestamp,
+                    'nonceStr': nonceStr,
+                    'package': packages,
+                    'signType': 'MD5',
+                    'paySign':paysign,
+                    'success':function(res){
+                       
+                        wx.showToast({
+                            title:'支付成功',
+                            icon:'none',
+                            duration:2000,
+                            })
+                    },
+                    'fail':function(res){                
+                         wx.showToast({
+                            title:res.errMsg,
+                            icon:'none',
+                            duration:2000,
+                            })
+                     },        
+                    })
+               
+                // this.hideModal()
+                // wx.reLaunch({
+                //     url:'/pages/mydetail/detail'
+                // })
             
             }else{
                 this.hideModal()

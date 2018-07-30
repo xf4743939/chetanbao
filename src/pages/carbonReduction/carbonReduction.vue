@@ -16,7 +16,9 @@
             <ul>
                 <li v-if="detail.items.length>0" class="item_li" v-for="(item,index) in detail.items" :key="index">
                     <div class="item">
-                        <div class="item1">停车减排</div>
+                        <div class="item1" v-if="item.type==carbonSpecificType.carbonRedction_photograph">碳减排--拍照</div>
+                        <div class="item1" v-if="item.type==carbonSpecificType.carbonRedction_mileage">碳减排--里程</div>
+                        <div class="item1" v-if="item.type==carbonSpecificType.carbonRedction_startStop">碳减排--停驶</div>
                         <div class="item2">{{ item.date}}</div>
                     </div>
                     <div class="item3">
@@ -37,7 +39,7 @@ import mpvueEcharts from 'mpvue-echarts'
 import {getAllWithReduction,getDetailWithReduction} from '../../utils/api.js'
 import request from '../../utils/request.js'
 import mptoast from 'mptoast'
-
+import {carbonSpecificType} from '../../utils/constant'
 //初始化图标
 let  charto=null ;
 let  weightCanvasone=null;
@@ -56,7 +58,8 @@ const  initCharto=(canvas, width, height) => {
 
 export default {
     data(){
-        return{   
+        return{ 
+            carbonSpecificType:carbonSpecificType,  
             echarts,
             onInit:initCharto,
             reduction:null,//奖励
@@ -81,6 +84,31 @@ export default {
      mptoast
     },
     methods:{
+        filters(item){    
+        
+           if(parseInt(item.totalCarbon)>0){
+                let arr=item.totalCarbon.toFixed(2).split('.')
+                let a=arr[0],b=arr[1];
+                let num
+                if(a && a.length>3 && a.length<7){
+                    num=(a/1000).toFixed(2) + "kg"
+                }else if(a && a.length>=7){
+                 num=(a/1000).toFixed(2) + "t"
+                }
+               item.totalCarbon=num
+           }
+           if(parseInt(item.totalPollute)>0){
+                let arr=item.totalPollute.toFixed(2).split('.')
+                let a=arr[0],b=arr[1];
+                let num
+                if(a && a.length>3 && a.length<7){
+                    num=(a/1000).toFixed(2) + "kg"
+                }else if(a && a.length>=7){
+                 num=(a/1000).toFixed(2) + "t"
+                }
+               item.totalPollute=num
+           }
+        }, 
         touchStart(ev){
             ev=ev || event;
             ev.preventDefault();
@@ -150,6 +178,7 @@ export default {
           .then(request.spread(function(a,b){
               that.reduction=a.result
               that.detail=b.result    
+              that.filters(that.reduction)
              that.initChart(that.detail.items)
           }))
           .catch(function(error){

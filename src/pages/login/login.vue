@@ -14,10 +14,10 @@
             </div>     
             <div class="weui-cells_form" v-if="loginOrRegister">
                 <div class="weui-cell">
-                        <input class="weui-input" type="tel" maxlength="11" @change="isDisable"  v-model="loginForm.phoneNumber"   placeholder="输入手机号码"/>
+                        <input class="weui-input" type="tel" maxlength="11" @change="isDisable"  v-model="loginForm.phoneNumber"   placeholder="请输入手机号码"/>
                 </div>
                 <div class="weui-cell">
-                        <input type="password" class="weui-input" @change="isDisable" v-model="loginForm.password"  placeholder="输入登录密码"/>  
+                        <input type="password" class="weui-input" @change="isDisable" v-model="loginForm.password"  placeholder="请输入密码"/>  
                 </div>
                 <div class="weui-cell">
 
@@ -28,13 +28,13 @@
             </div>  
             <div class="weui-cells_form" v-else>
                 <div class="weui-cell">
-                        <input class="weui-input" type="tel" maxlength="11" @change="disable" v-model="register.phoneNumber" placeholder="输入手机号码"/>
+                        <input class="weui-input" type="tel" maxlength="11" @change="disable" v-model="register.phoneNumber" placeholder="请输入手机号码"/>
                 </div>
                 <div class="weui-cell">
-                        <input type="password" class="weui-input"  @change="disable" v-model="register.password" placeholder="输入注册密码"/>  
+                        <input type="password" class="weui-input"  @change="disable" v-model="register.password" placeholder="请输入密码"/>  
                 </div>
                 <div class="weui-cell code_wrap">
-                   <input type="text" class="weui-input" @change="disable" v-model="register.code" placeholder="输入验证码"/>
+                   <input type="text" class="weui-input" @change="disable" v-model="register.code" placeholder="请输入验证码"/>
                    <button class="btn1" :class="currentTime==61 ? 'activeCode': 'disBtn' "  id="codeBtn"  @click="getVerificationCode" v-bind:disabled="currentTime<61">{{time}}</button>
                 </div>
                 <div class="weui-cell">
@@ -151,11 +151,11 @@ export default {
         async getUserInfo(){
             let res = await getCurrentLoginInfo()
             if(res && res.success){
-                let userInfo=res.result;
-                
-                this.$store.commit('SAVEUSERINFO',userInfo)
-                wx.setStorageSync('userInfo',userInfo)
-                this.goToUrl(userInfo)    
+                let userInfo=res.result;  
+                 this.$store.commit('SAVEUSERINFO',userInfo)
+                 wx.setStorageSync('userInfo',userInfo)
+                 
+                 this.goToUrl(userInfo)    
             }else {
               this.$mptoast(res.error.message,'none',2000)
             }
@@ -166,7 +166,7 @@ export default {
              url:'/pages/mydetail/detail'
            })
         }else{
-            this.$router.push({path:'/pages/carplate/carplate'})
+            this.$router.push({path:'/pages/home/home'})
         }
      },
        async login(){
@@ -211,6 +211,7 @@ export default {
                            try{
                                wx.setStorageSync("authToken",ret.result);
                                this.$store.commit('LOGINSTATUS',true)
+                               
                                this.getUserInfo()
                             
                            }catch(e){

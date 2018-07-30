@@ -16,7 +16,11 @@
             <ul>
                 <li v-if="detail.items && detail.items.length>0 " class="item_li" v-for="(item,index) in detail.items" :key="index">
                     <div class="item">
-                        <div class="item1">停车获得</div>
+                        <div class="item1" v-if="item.type==carbonSpecificType.awardMoney_regist">奖励金--注册</div>
+                        <div class="item1" v-if="item.type==carbonSpecificType.awardMoney_sign">奖励金--签到</div>
+                        <div class="item1" v-if="item.type==carbonSpecificType.awardMoney_photograph">奖励金--拍照</div>
+                        <div class="item1" v-if="item.type==carbonSpecificType.awardMoney_mileage">奖励金--里程</div>
+                        <div class="item1" v-if="item.type==carbonSpecificType.awardMoney_startStop">奖励金--停驶</div>
                         <div class="item2">{{ item.date}}</div>
                     </div>
                     <div class="item3">
@@ -34,7 +38,7 @@ import echarts from 'echarts/dist/echarts.common.min'
 import mpvueEcharts from 'mpvue-echarts'
 import {getStatistics,getDrawData,getDetaildata} from '../../utils/api.js'
 import request from '../../utils/request.js'
-
+import {carbonSpecificType} from '../../utils/constant'
 //初始化图标
 let  charto=null ;
 let  weightCanvasone=null;
@@ -53,6 +57,7 @@ const  initCharto=(canvas, width, height) => {
 export default {
     data(){
         return{
+            carbonSpecificType:carbonSpecificType,
             echarts,
             onInit:initCharto,
             award:null,//奖励

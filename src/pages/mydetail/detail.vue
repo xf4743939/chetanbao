@@ -37,7 +37,7 @@
                               <span style="color:#999;">碳</span>
                         </div>
                         <div>
-                          <span style="margin-right:10rpx;">{{ userInfo.cPollute | format }}</span>
+                          <span style="margin-right:10rpx;">{{ userInfo.cPollute }}</span>
                        
                           <span style="color:#999">污染物</span>
                         </div>                
@@ -99,13 +99,8 @@ export default {
         return{
            nextDay:0,
            wifiStatus:wifiStatus,
-           userInfo:null,
-           
+           userInfo:null,      
         }
-    },
-  
-    computed: {
-    //   ...mapState(['userInfo'])
     },
     methods: {
         filters(userInfo){
@@ -168,7 +163,7 @@ export default {
            }
        }
     },
-    mounted () {
+    mounted () {  
       this.getCurrentLoginInfo()
     }
 }

@@ -28,34 +28,46 @@ request.interceptors.request.use((request) => {
       return promise.resolve(response.data)
     },
     (err, promise) => {
-
       wx.hideLoading()
-      switch(err.status){
+      if(err){
+        switch(err.status){
      
-        case 401 :
-          wx.removeStorageSync('authToken')
-          wx.redirectTo({
-            url:'/pages/login/login'
-          })
-          break;
-         case 403 :
-         wx.removeStorageSync('authToken')
-         wx.showToast({
-           title:'你的账号已在其它的设备上登录',
-           icon:'none',
-           duration:2000,
-           success:function(){
-              wx.redirectTo({
-                url:'/pages/login/login'
-              })
-           }
-         })
-         break;
-         case 404 :
-         wx.removeStorageSync('authToken')
-         wx.removeStorageSync('userInfo')
-         break;
-      }
+          case 401 :
+             wx.clearStorageSync()
+             wx.redirectTo({
+              url:'/pages/login/login'
+            })
+            break;
+           case 403 :
+           wx.showToast({
+            title:'你的账号已在其它的设备上登录',
+            icon:'none',
+            duration:2000,
+            success:function(){       
+               wx.redirectTo({
+                 url:'/pages/login/login'
+               })
+            },
+            fail:function(){
+              
+            }
+          })    
+           wx.clearStorageSync()
+           break;
+           case 404 :
+           wx.removeStorageSync('authToken')
+           wx.removeStorageSync('userInfo')
+           break;
+           default:
+           wx.showToast({title:'连接错误'})
+        }
+      }else{
+          wx.showToast({
+            title:'请检查您的网络',
+            icon:'none',
+            duration:2000
+          })  
+      }  
       return promise.resolve()
     }
   )

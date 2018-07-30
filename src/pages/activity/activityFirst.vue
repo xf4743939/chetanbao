@@ -39,16 +39,16 @@ export default {
                if(this.disabled){
                 return ;
                } 
-                 this.$store.commit('UPDATETYPE',1)        
+               this.$store.commit('UPDATETYPE',1)        
                if(!this.isLogin){
                   this.$router.push({path:'/pages/login/login'})
                }else{
-                 if(this.userInfo && this.userInfo.carNo.length){
+                 if(this.userInfo && this.userInfo.carNo && this.userInfo.carNo.length){
                      wx.reLaunch({
                                   url:'/pages/mydetail/detail'
                              })     
                  }else{
-                    this.$router.push({path:'/pages/carplate/carplate'}) 
+                     this.$router.push({path:'/pages/carplate/carplate'}) 
                  }
                  
                }
@@ -57,10 +57,10 @@ export default {
              if(this.isLogin){
                  if(this.userInfo && this.userInfo.gameListType==gameListType.two){
                        this.disabled=true
-                     this.btnTxt='已参加活动二，不能再参加此活动'
+                      this.btnTxt='已参加活动二，不能再参加此活动'
                  }else if(this.userInfo && this.userInfo.gameListType==gameListType.one){
                       this.disabled=true
-                    this.btnTxt='已参加'
+                      this.btnTxt='已参加'
                  }
              }
         }

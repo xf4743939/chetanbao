@@ -49,7 +49,7 @@ export default {
 
                   let res= await updateCarBLInfoByMe(data)
                     if(res && res.success){ 
-                         this.$store.state.userInfo.carNo=carNoText.toUpperCase();
+                           this.$store.state.userInfo.carNo=carNoText.toUpperCase();
                             wx.reLaunch({
                                   url:'/pages/mydetail/detail'
                                })                      

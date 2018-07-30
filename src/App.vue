@@ -7,12 +7,13 @@ export default {
   created () {
      let token=wx.getStorageSync('authToken');
       if(!token){
-        this.$store.commit('LOGINSTATUS',false)
+         this.$store.commit('LOGINSTATUS',false);
+         wx.clearStorageSync()
       }else{
           this.$store.commit('LOGINSTATUS',true);
-          if(!this.userInfo){
-             this.getUserInfo()
-          }       
+            if(!this.userInfo){                 
+                this.getUserInfo()         
+            }               
       }  
   },
   computed: {

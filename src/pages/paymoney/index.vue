@@ -80,7 +80,7 @@ export default {
         detailModal
     },
     computed: {
-      ...mapState(['fee','carNo','schem','address','gameFeeChoiceType'])  
+      ...mapState(['fee','carNo','schem','address','gameFeeChoiceType','userInfo'])  
     },
     methods: {
           hideModal(){
@@ -112,8 +112,9 @@ export default {
             if(!this.carNo || this.carNo.length==0){
                 const carNo=wx.getStorageSync('carNo')   
                 if(carNo){
-                     this.$store.state.carNo=carNo
-                  
+                     this.$store.state.carNo=carNo  
+                }else{
+                    this.$store.state.carNo=this.userInfo.carNo
                 }
             }
               if(!this.schem){
@@ -137,6 +138,7 @@ export default {
           
         },
         confirm(){
+        
             const that=this
             if(this.zfchecked){
                 this.gameFeePayType=2
@@ -156,8 +158,7 @@ export default {
         }
     },
     mounted () {
-        this.initData()
-        
+        this.initData()      
     }
      
 }

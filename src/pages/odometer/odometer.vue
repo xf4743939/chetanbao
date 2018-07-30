@@ -28,7 +28,7 @@
                  {{ item.sMileage }}公里
              </div>
              <div>
-                 <img v-if="item.eDate && item.eMileage " @click="showModal" src="../../../static/images/detail.png" style="width:23px;height:27px;">
+                 <img v-if="item.eDate && item.eMileage>0 && item.theStatus==3 " @click="showModal(item)" src="../../../static/images/detail.png" style="width:23px;height:27px;">
              </div>
           </div>
           <div class="odemeter_img">
@@ -48,7 +48,7 @@ import{mapState} from 'vuex'
 export default {
     data(){
         return {
-            isShow:false,
+           isShow:false,
            imgUrl:'', //拍照的图片路径
            number:'',//里程数
            page:1,//第一页
@@ -70,14 +70,14 @@ export default {
         hideModal(){
             this.isShow=false;     
         },
-        showModal(){
-            this.modalVal=this.mileages[0];
+        showModal(item){
+            this.modalVal=item;
            this.isShow=true;
         },
         async nextLoadPicDay(){
             let res=await nextLoadPicDay()
             if(res && res.success){
-                  debugger
+                 
             }else{
                this.$mptoast(res.error.message,'none',2000)
             }
@@ -118,7 +118,8 @@ export default {
                 header: {'Authorization':`Bearer ${csrfToken.accessToken}`,
                          "Content-Type": "image/jpg", //表单提交时伴随文件上传的场合
                 },
-                success: function (res) {         
+                success: function (res) {   
+                
                        try{
                                 let imgUrl= JSON.parse(res.data).result  
                                
@@ -128,13 +129,16 @@ export default {
                              
                                 that.createMileage(imgUrl[0])    
                        }catch(e){
-                           console.log(e)
+                             that.$mptoast('上传失败','none',2000)
+                             that.imgUrl="";
+                            console.log(e)
                        }
                     
                  
                 },
                 fail: function (e) {    
                   that.$mptoast('上传失败','none',2000)
+                  this.imgUrl="";
                 }
            })  
         },
@@ -144,16 +148,17 @@ export default {
                  mileage:parseInt(this.number),
                  imgSrc:url
             }
-          
-           let res=await createMileage(parms)
         
+           let res=await createMileage(parms)
+   
            if(res && res.success){
                this.imgUrl='';
                this.number='';
-              this.$mptoast('上传成功','none',2000)
+               this.$mptoast('上传成功','none',2000)
                this.getMileageListByFilter()
            }else{
-               this.$mptoast(res.error.message,'none',2000)
+                this.imgUrl="";
+               this.$mptoast('上传失败','none',2000)
            }
         },
        async getMileageListByFilter(){
@@ -165,7 +170,8 @@ export default {
        
            if(res && res.success){
                this.mileagesObj=res.result
-               this.mileages=res.result.items;     
+               this.mileages=res.result.items
+            
            }else{
                this.$mptoast(res.error.message,'none',2000)
            }
@@ -179,7 +185,6 @@ export default {
         }
     },
     mounted () {
-       console.log(this.userInfo)
         this.getMileageListByFilter();
     }
 }

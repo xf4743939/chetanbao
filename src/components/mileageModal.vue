@@ -11,7 +11,7 @@
                     </div>
                     <div class="num">
                          <div>里程表表值</div>
-                         <div>{{ mileages.eMileage }}公里</div>
+                         <div>{{ mileages.eMileage || 0 }}公里</div>
                     </div>
                 </div>
                 <div class="item item_date">
@@ -81,10 +81,11 @@ export default {
       }, 
     },
     mounted () {
-       
+    
        if(this.mileages && Object.keys(this.mileages).length>0){
-           let num=this.mileages.eMileage-this.mileages.sMileage
-           this.allNum=num>0? num : 0 
+     
+           let num=(this.mileages.eMileage || 0)-this.mileages.sMileage
+           this.allNum=num> 0 ? num : 0 
        }
     
     }

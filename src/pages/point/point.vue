@@ -17,7 +17,11 @@
             <ul>
                 <li v-if="detail.items.length>0" class="item_li" v-for="(item,index) in detail.items" :key="index">
                     <div class="item">
-                        <div class="item1">停驾减排</div>
+                        <div class="item1" v-if="item.type==21">碳积分--注册</div>
+                        <div class="item1" v-if="item.type==22">碳积分--签到</div>
+                        <div class="item1" v-if="item.type==23">碳积分--拍照</div>
+                        <div class="item1" v-if="item.type==24">碳积分--里程</div>
+                        <div class="item1" v-if="item.type==25">碳积分--停驶</div>
                         <div class="item2">{{ item.date}}</div>
                     </div>
                     <div class="item3">
@@ -34,7 +38,7 @@ import echarts from 'echarts/dist/echarts.common.min'
 import mpvueEcharts from 'mpvue-echarts'
 import {getAllWithCarbon,getDrawWithCarbon,getDetailwithCarBon} from '../../utils/api.js'
 import request from '../../utils/request.js'
-
+import {carbonSpecificType} from '../../utils/constant'
 //初始化图标
 let  charto=null ;
 let  weightCanvasone=null;
@@ -54,6 +58,7 @@ const  initCharto=(canvas, width, height) => {
 export default {
     data(){
         return{
+            carbonSpecificType:carbonSpecificType,
             echarts,     
             onInit:initCharto,
             charto:null,
@@ -148,16 +153,18 @@ export default {
          .then(request.spread(function(a,b,c){
               that.carbon=a.result;
               that.draw=b.result;
-              that.detail=c.result; 
-               
+              that.detail=c.result;  
               that.initChart(that.draw.items)
          }))
       },
       initChart(arr){
-         
+          if(!arr || arr.length==0){
+              return ;
+          }
           let x=[];
           let y=[]; 
-           let title=arr[arr.length-1].date.substring(0,4) || 2018        
+        
+        let title=arr[arr.length-1].date ? arr[arr.length-1].date.substring(0,4) : 2018       
           arr.forEach(((item,index)=>{
               x[index]=item.date.substring(5,10).replace(/-/g,'/');
               y[index]=item.totalPoints   

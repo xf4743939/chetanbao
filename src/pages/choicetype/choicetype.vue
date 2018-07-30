@@ -12,14 +12,14 @@
           </div>
           <div class="types">
               <div class="type1 type" @click="choice(1)">
-              支持支付宝/微信支付设备押金,押金共计80元.使用满一年后押金即可提现,车载WIFI设备您可保留,继续使用“车碳宝”APP仍可获得现金和碳积分奖励.
+              支持支付宝/微信支付设备押金,押金共计200元.使用满一年后押金即可提现,车载WIFI设备您可保留,继续使用“车碳宝”APP仍可获得现金和碳积分奖励.
               </div>
           </div>
          <div class="types" v-if="false">
               <div class="type2 type" @click="choice(2)">
                  采用租赁贷方式代为支付押金.
               </div>
-          </div>
+          </div>          
           <mptoast/> 
     </div>
 </template>
