@@ -1,7 +1,7 @@
 <template>
     <div class="odometer ">
        <mptoast/>
-       <mileage-modal v-if="isShow" :isShow="isShow"  v-on:hideModal="hideModal" :mileages="modalVal"></mileage-modal>
+       <mileage-modal v-if="isShow" :isShow="isShow"  v-on:hideModal="hideModal" :mileage="modalVal"></mileage-modal>
       <div class="odometer_head">
           <div style="width:85px;">输入里程表</div>
           <div style="width:150px;"><input type="number"  max="999999" min="0" maxlength="6" placeholder="输入里程表数值" v-model="number"></div>
@@ -18,8 +18,8 @@
       </div>
        
       <div v-else  class="odometr_main" @click="authorize">
-          <span v-if="userInfo && userInfo.nextPicDay==0">点击拍摄里程表照片</span>
-          <span v-if="userInfo && userInfo.nextPicDay>0">距离可拍照时间{{ userInfo.nextPicDay }}天</span>
+          <span v-if="nextLoadPicDay==0">点击拍摄里程表照片</span>
+          <span v-if="nextLoadPicDay>0">距离可拍照时间{{ nextLoadPicDay }}天</span>
       </div>
       <div class="odometerList" v-if="mileages" v-for="(item,index) in mileages" :key="index">
           <div class="odometer_info">
@@ -45,6 +45,7 @@ import enums from '../../utils/enum'
 import mptoast from 'mptoast'
 import mileageModal from '../../components/mileageModal'
 import{mapState} from 'vuex'
+import request from '../../utils/request.js'
 export default {
     data(){
         return {
@@ -56,7 +57,8 @@ export default {
            mileagesObj:null,
            mileages:[], //历史里程
            baseUrl:baseUrl,//网站地址
-           modalVal:null //传给modal 
+           modalVal:null, //传给modal 
+           nextLoadPicDay:0, //下次上传的天数
         }
     },
     components: {
@@ -72,20 +74,13 @@ export default {
         },
         showModal(item){
             this.modalVal=item;
-           this.isShow=true;
+            this.isShow=true;
         },
-        async nextLoadPicDay(){
-            let res=await nextLoadPicDay()
-            if(res && res.success){
-                 
-            }else{
-               this.$mptoast(res.error.message,'none',2000)
-            }
-        },
+     
         //调取摄像头拍照
         authorize(){
             const that=this
-           if(this.userInfo && this.userInfo.nextPicDay>0){
+           if(this.nextLoadPicDay && this.nextLoadPicDay>0){
                return;
            } 
            wx.chooseImage({
@@ -131,7 +126,7 @@ export default {
                        }catch(e){
                              that.$mptoast('上传失败','none',2000)
                              that.imgUrl="";
-                            console.log(e)
+                           
                        }
                     
                  
@@ -155,27 +150,27 @@ export default {
                this.imgUrl='';
                this.number='';
                this.$mptoast('上传成功','none',2000)
-               this.getMileageListByFilter()
+               this.initData()
            }else{
                 this.imgUrl="";
                this.$mptoast('上传失败','none',2000)
            }
         },
-       async getMileageListByFilter(){
-           let data={
+   
+       initData(){
+           const that=this;
+             let data={
                page:this.page,
                rows:this.num
-           } 
-           let res= await getMileageListByFilter(data);
-       
-           if(res && res.success){
-               this.mileagesObj=res.result
-               this.mileages=res.result.items
-            
-           }else{
-               this.$mptoast(res.error.message,'none',2000)
-           }
-       },
+            } 
+              request.all([nextLoadPicDay(),getMileageListByFilter(data)])
+                .then(request.spread(function(a,b){
+                  
+                    that.mileagesObj=b.result;
+                    that.mileages=b.result.items;
+                    that.nextLoadPicDay=a.result;
+                }))
+       }, 
         cancel(){
             this.imgUrl='';
             this.authorize()
@@ -184,8 +179,9 @@ export default {
            this.upload()  
         }
     },
-    mounted () {
-        this.getMileageListByFilter();
+    mounted (){
+        this.initData()
+        // this.getMileageListByFilter();
     }
 }
 </script>

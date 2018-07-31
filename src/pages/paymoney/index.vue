@@ -19,7 +19,10 @@
                     <span>微信支付</span>
                   </div>
                   <div>
-                       <checkbox-group @change="changewx">
+                          <div class="check" @click="changewx" style="width:22px;height:22px;border-radius:50%;position:absolute;"></div>
+                            <img v-if="checked" src="../../../static/images/select_active.png" style="width:22px;height:22px;" alt=""> 
+                            <img v-if="!checked" src="../../../static/images/select.png" style="width:22px;height:22px;" alt="">
+                       <!-- <checkbox-group @change="changewx">
                         <label class="weui-cell weui-check__label">
                             <checkbox class="weui-check"  :checked="checked" />
                             <div class="weui-cell__hd weui-check__hd_in-checkbox">
@@ -27,7 +30,7 @@
                                 <icon class="weui-icon-checkbox_success" type="success" size="23" v-if="checked"></icon>
                             </div>
                         </label>
-                      </checkbox-group>
+                      </checkbox-group> -->
                   </div>
                   
               </div>
@@ -37,7 +40,10 @@
                      <span>支付宝支付</span>
                   </div>
                    <div>
-                        <checkbox-group @change="changezf">
+                     <div class="check" @click="changezf" style="width:22px;height:22px;border-radius:50%;position:absolute;"></div>
+                     <img v-if="zfchecked" src="../../../static/images/select_active.png" style="width:22px;height:22px;" alt=""> 
+                     <img v-if="!zfchecked" src="../../../static/images/select.png" style="width:22px;height:22px;" alt="">
+                        <!-- <checkbox-group @change="changezf">
                                 <label class="weui-cell weui-check__label">
                                     <checkbox class="weui-check"  :checked="zfchecked" />
                                     <div class="weui-cell__hd weui-check__hd_in-checkbox">
@@ -45,7 +51,7 @@
                                         <icon class="weui-icon-checkbox_success" type="success" size="23" v-if="zfchecked"></icon>
                                     </div>
                                 </label>
-                        </checkbox-group>
+                        </checkbox-group> -->
                    </div>       
               </div>
           </div>
@@ -87,6 +93,7 @@ export default {
             this.isShow=false;     
         },
         changewx(){
+          
             if(this.checked){
                 return;
             }
@@ -94,6 +101,7 @@ export default {
             this.zfchecked=false
         },
         changezf(){
+          
             if(this.zfchecked){
                 return;
             }

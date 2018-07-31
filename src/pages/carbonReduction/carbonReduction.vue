@@ -2,7 +2,7 @@
     <div class="reward_container page_Wrap">
         <div class="reward_head" v-if="reduction">
             <div>
-                减排碳<span class="cur">{{reduction.totalCarbon}}</span>g&nbsp;,&nbsp;&nbsp;减排污染物<span class="sum ">{{ reduction.totalPollute }}</span>g
+                减排碳<span class="cur">{{reduction.totalCarbon}}</span>&nbsp;,&nbsp;&nbsp;减排污染物<span class="sum ">{{ reduction.totalPollute }}</span>
             </div>
         </div>
         <div class="reward_main wrap"  @touchstart='touchStart'            
@@ -22,8 +22,8 @@
                         <div class="item2">{{ item.date}}</div>
                     </div>
                     <div class="item3">
-                        <div class="item1">碳 {{item.carbon}}g</div>
-                        <div class="item2">污染物{{ item.pollute}}g</div>
+                        <div class="item1">碳 {{item.carbon}}</div>
+                        <div class="item2">污染物{{ item.pollute}}</div>
                     </div>
                     
                 </li>
@@ -85,28 +85,47 @@ export default {
     },
     methods:{
         filters(item){    
-        
-           if(parseInt(item.totalCarbon)>0){
-                let arr=item.totalCarbon.toFixed(2).split('.')
-                let a=arr[0],b=arr[1];
-                let num
-                if(a && a.length>3 && a.length<7){
-                    num=(a/1000).toFixed(2) + "kg"
-                }else if(a && a.length>=7){
-                 num=(a/1000).toFixed(2) + "t"
-                }
-               item.totalCarbon=num
+          
+           if(parseInt(item.totalCarbon)>=0){
+            
+               if(item.totalCarbon==0){
+                
+                   item.totalCarbon="0g"
+                  
+               }else{
+                    let arr=item.totalCarbon.toFixed(2).split('.')
+                        let a=arr[0],b=arr[1];
+                        let num
+                        if(a && a.length>3 && a.length<7){
+                            num=(a/1000).toFixed(2) + "kg"
+                        }else if(a && a.length>=7){
+                        num=(a/1000).toFixed(2) + "t"
+                        }else if(a && a>0 &&  a.length<=3){   
+                            num=item.totalCarbon.toFixed(2) + 'g'
+                        }
+                    item.totalCarbon=num
+               }
+              
            }
-           if(parseInt(item.totalPollute)>0){
-                let arr=item.totalPollute.toFixed(2).split('.')
-                let a=arr[0],b=arr[1];
-                let num
-                if(a && a.length>3 && a.length<7){
-                    num=(a/1000).toFixed(2) + "kg"
-                }else if(a && a.length>=7){
-                 num=(a/1000).toFixed(2) + "t"
-                }
-               item.totalPollute=num
+           if(parseInt(item.totalPollute)>=0){
+           
+                if(item.totalPollute==0){
+                    item.totalPollute='0g'
+                    
+                } else{
+                        let arr=item.totalPollute.toFixed(2).split('.')
+                        let a=arr[0],b=arr[1];
+                        let num
+                        if(a && a.length>3 && a.length<7){
+                            num=(a/1000).toFixed(2) + "kg"
+                        }else if(a && a.length>=7){
+                        num=(a/1000).toFixed(2) + "t"
+                        }else{
+                            num=a.toFixed(2) + 'g'
+                        }
+                     item.totalPollute=num
+                } 
+              
            }
         }, 
         touchStart(ev){

@@ -104,32 +104,40 @@ export default {
     },
     methods: {
         filters(userInfo){
-           
-           if(parseInt(userInfo.cMoney)>=0){
-               userInfo.cMoney=userInfo.cMoney.toFixed(2)
-           }
-           if(parseInt(userInfo.cReduction)>0){
-                let arr=userInfo.cReduction.toFixed(2).split('.')
-                let a=arr[0],b=arr[1];
-                let num
-                if(a && a.length>3 && a.length<7){
-                    num=(a/1000).toFixed(2) + "kg"
-                }else if(a && a.length>=7){
-                 num=(a/1000).toFixed(2) + "t"
-                }
-                userInfo.cReduction=num
-           }
-           if(parseInt(userInfo.cPollute)>0){
-                let arr=userInfo.cPollute.toFixed(2).split('.')
-                let a=arr[0],b=arr[1];
-                let num
-                if(a && a.length>3 && a.length<7){
-                    num=(a/1000).toFixed(2) + "kg"
-                }else if(a && a.length>=7){
-                 num=(a/1000).toFixed(2) + "t"
-                }
-                userInfo.cPollute=num
-           }
+                           
+                           if(parseInt(userInfo.cMoney)>=0){
+                               userInfo.cMoney=userInfo.cMoney.toFixed(2)
+                           }
+                            if(parseInt(userInfo.cReduction)>0){
+                                let arr=userInfo.cReduction.toFixed(2).split('.')
+                                let a=arr[0],b=arr[1];
+                                let num
+                                if(a && a.length>3 && a.length<7){
+                                    num=(a/1000).toFixed(2) + "kg"
+                                }else if(a && a.length>=7){
+                                num=(a/1000).toFixed(2) + "t"
+                                }else{
+                                    num=a.toFixed(2) + 'g'
+                                }
+                                userInfo.cReduction=num
+                        }else if(parseInt(userInfo.cReduction)==0){
+                            userInfo.cReduction='0g'
+                        }
+                        if(parseInt(userInfo.cPollute)>0){
+                                let arr=userInfo.cPollute.toFixed(2).split('.')
+                                let a=arr[0],b=arr[1];
+                                let num
+                                if(a && a.length>3 && a.length<7){
+                                    num=(a/1000).toFixed(2) + "kg"
+                                }else if(a && a.length>=7){
+                                num=(a/1000).toFixed(2) + "t"
+                                }else{
+                                    num= a.toFixed(2) + 'g'
+                                }
+                                userInfo.cPollute=num
+                        }else if(parseInt(userInfo.cPollute)==0){
+                              userInfo.cPollute='0g'
+                        }      
         },
         ...mapMutations(['SAVEUSERINFO']),
        camer(){

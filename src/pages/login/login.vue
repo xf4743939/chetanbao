@@ -39,16 +39,12 @@
                 </div>
                 <div class="weui-cell">
                 </div>
-                 <div class="register_server">
-                   <checkbox-group @change="checkboxChange">
-                        <label class="weui-cell weui-check__label label_server">
-                            <checkbox class="weui-check"  :checked="checked" />
-                             <div class="weui-cell__hd weui-check__hd_in-checkbox">
-                                <icon class="weui-icon-checkbox_circle icon1" type="circle" size="23" v-if="!checked"></icon>
-                                <icon class="weui-icon-checkbox_success icon1" type="success" size="23" v-if="checked"></icon>
-                            </div>
-                        </label>
-                  </checkbox-group>           
+                 <div class="register_server">       
+                     <div class="check" @click="change" style="width:18px;height:18px;border-radius:50%;position:absolute;"></div>
+                     <img v-if="checked" src="../../../static/images/select_active.png" style="width:18px;height:18px;" alt=""> 
+                     <img v-if="!checked" src="../../../static/images/select.png" style="width:18px;height:18px;" alt="">
+
+                
                   <div class="rules"><span>同意《</span><a style="color:#4eb248;" href="/pages/terms/terms">使用条款及隐私</a><span>》</span></div>
                 </div>        
                  <div class="btn_wrap">
@@ -87,6 +83,11 @@ export default {
       showModal  
     },
     methods: {
+        change(){
+         
+           this.checked=!this.checked
+           this.disable()
+        },
         hideModal(){
           this.isShow=false;
           this.refreshData() 
@@ -133,10 +134,7 @@ export default {
           }
           return true
         },
-        checkboxChange(){
-            this.checked=!this.checked
-            this.disable()
-        },
+      
         btnclick(login){
            this.loginOrRegister=login
            if(login){
@@ -321,6 +319,9 @@ export default {
         padding-left: 30rpx;
         padding-right: 30rpx;
         box-sizing: border-box;
+        .ck[type="checkbox"]:checked{
+            background: #4eb248;
+        }
         .disBtn[disabled]{
             background: #999;
             color: #fff;

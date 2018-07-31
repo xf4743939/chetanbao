@@ -44,7 +44,7 @@
                       减排碳
                     </div>
                     <div class="val">
-                      {{ mileages.cReduction }}g
+                      {{ mileages.cReduction }}
                     </div>
                 </div>
                 <div class="item item1">
@@ -52,7 +52,7 @@
                       减排污染物
                    </div>
                    <div class="val">
-                       {{ mileages.cPollute }}g
+                       {{ mileages.cPollute }}
                    </div>
                 </div>
             </div>
@@ -68,11 +68,45 @@ export default {
     data(){
         return{
             showModal:false,
-            allNum:0,//总里程     
+            allNum:0,//总里程 
+            mileages:{},//里程详情    
         }
     },
-    props: ['isShow','mileages'],
+    props: ['isShow','mileage'],
     methods: {
+          filters(item){
+          
+            
+                    if(parseInt(item.cReduction)>0){
+                     
+                        let arr=item.cReduction.toFixed(2).split('.')
+                        let a=arr[0],b=arr[1];
+                        let num
+                        if(a && a.length>3 && a.length<7){
+                            num=(a/1000).toFixed(2) + "kg"
+                        }else if(a && a.length>=7){
+                        num=(a/1000).toFixed(2) + "t"
+                        }else{
+                            num=a.toFixed(2) +'g'
+                        }
+                        item.cReduction=num
+                  }
+                    if(parseInt(item.cPollute)>0){
+                            let arr=item.cPollute.toFixed(2).split('.')
+                            let a=arr[0],b=arr[1];
+                            let num
+                            if(a && a.length>3 && a.length<7){
+                                num=(a/1000).toFixed(2) + "kg"
+                            }else if(a && a.length>=7){
+                            num=(a/1000).toFixed(2) + "t"
+                            }else{
+                                num=a.toFixed(2) +'g'
+                            }
+                            item.cPollute=num
+                    }
+           
+     
+        },
        preventTouchMove(){
       },
        close(){
@@ -81,9 +115,10 @@ export default {
       }, 
     },
     mounted () {
-    
-       if(this.mileages && Object.keys(this.mileages).length>0){
+      this.mileages=Object.assign(this.mileages,this.mileage)
      
+       if(this.mileages && Object.keys(this.mileages).length>0){
+           this.filters(this.mileages)
            let num=(this.mileages.eMileage || 0)-this.mileages.sMileage
            this.allNum=num> 0 ? num : 0 
        }

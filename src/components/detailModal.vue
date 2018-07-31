@@ -63,8 +63,11 @@ export default {
             this.payMoney()
          }, 
         async payMoney(){
-            let data=this.payInfo
+            //  this.payInfo.wxtradeType=1
+             let data=this.payInfo
+            
             let res= await applyGameTwo(data)
+            console.log(res)
             if(res && res.success){
                 let data=JSON.parse(res.result);
                 let appid=data.appid
@@ -81,6 +84,7 @@ export default {
                     'package': packages,
                     'signType': 'MD5',
                     'paySign':paysign,
+
                     'success':function(res){
                        
                         wx.showToast({
@@ -88,6 +92,7 @@ export default {
                             icon:'none',
                             duration:2000,
                             })
+                            this.hideModal()
                     },
                     'fail':function(res){                
                          wx.showToast({
@@ -95,6 +100,7 @@ export default {
                             icon:'none',
                             duration:2000,
                             })
+                            this.hideModal()
                      },        
                     })
                
