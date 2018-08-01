@@ -96,7 +96,7 @@ export default {
             Object.assign(this.$data,this.$options.data())
         },
         isRegister(){  
-          const myreg=/^[1][3,4,5,7,8][0-9]{9}$/; 
+          const myreg=/^[1][0,3,4,5,7,6,8,9][0-9]{9}$/; 
           if(!this.register.phoneNumber || this.register.phoneNumber.length===0){ 
               this.$mptoast('请输入手机号码','none',2000)
               return false;
@@ -222,17 +222,13 @@ export default {
             }        
       },
       async getCode(){
-          const myreg=/^[1][3,4,5,7,8][0-9]{9}$/;    
+        const myreg=/^[1][0,3,4,5,7,6,8,9][0-9]{9}$/; 
           if(!this.register.phoneNumber || this.register.phoneNumber.length===0){ 
               this.$mptoast('请输入手机号码','none',2000)
               return false;
           }
           if(!myreg.test(this.register.phoneNumber)){
                this.$mptoast('您输入的手机号码格式不正确请重新输入','none',2000)
-               return false;
-          }
-            if(!this.register.password || this.register.password.length<6){
-               this.$mptoast('密码长度为6~18位','none',2000)
                return false;
           }
      

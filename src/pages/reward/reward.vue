@@ -174,7 +174,7 @@ export default {
          
           arr.forEach(((item,index)=>{
               x[index]=item.date.substring(5,10).replace(/-/g,'/');
-              y[index]=item.totalMoney   
+              y[index]=item.totalMoney.toFixed(2)   
           })) 
    
         let option = {    

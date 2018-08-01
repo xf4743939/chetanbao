@@ -63,11 +63,12 @@ export default {
             this.payMoney()
          }, 
         async payMoney(){
-            //  this.payInfo.wxtradeType=1
+            const that=this;
+             this.payInfo.wxtradeType=1
              let data=this.payInfo
             
             let res= await applyGameTwo(data)
-            console.log(res)
+        
             if(res && res.success){
                 let data=JSON.parse(res.result);
                 let appid=data.appid
@@ -76,8 +77,9 @@ export default {
                 let packages='prepay_id='+ data.prepayid
                 let keys="gS8NoVGODkOCtuEisN8ZmN6qeSbSF4y9";
                 const str=`appid=${appid}&nonceStr=${nonceStr}&package=prepay_id=${data.prepay_id}&signType=MD5&timeStamp${timestamp}&key=${keys}`
-                let paysign=md5(str).toUpperCase()     
-                console.log(paysign)          
+                let paysign=md5(str).toUpperCase()    
+                console.log(data.sign,'返回') 
+                console.log(paysign,'wode')          
                 wx.requestPayment({
                     'timeStamp':timestamp,
                     'nonceStr': nonceStr,
@@ -92,7 +94,7 @@ export default {
                             icon:'none',
                             duration:2000,
                             })
-                            this.hideModal()
+                            that.hideModal()
                     },
                     'fail':function(res){                
                          wx.showToast({
@@ -100,7 +102,7 @@ export default {
                             icon:'none',
                             duration:2000,
                             })
-                            this.hideModal()
+                            that.hideModal()
                      },        
                     })
                
@@ -110,7 +112,7 @@ export default {
                 // })
             
             }else{
-                this.hideModal()
+                that.hideModal()
                wx.showToast({
                    title:res.error.message,
                    icon:'none',

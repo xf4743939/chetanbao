@@ -167,7 +167,7 @@ export default {
         let title=arr[arr.length-1].date ? arr[arr.length-1].date.substring(0,4) : 2018       
           arr.forEach(((item,index)=>{
               x[index]=item.date.substring(5,10).replace(/-/g,'/');
-              y[index]=item.totalPoints   
+              y[index]=item.totalPoints.toFixed(2)   
           })) 
        
         let option = {    

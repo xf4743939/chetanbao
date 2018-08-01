@@ -215,8 +215,8 @@ export default {
           }  
           arr.forEach(((item,index)=>{
               x[index]=item.date.substring(5,10).replace(/-/g,'/');
-              y1[index]=item.carbon;
-              y2[index]=item.pollute;   
+              y1[index]=item.carbon.toFixed(2);
+              y2[index]=item.pollute.toFixed(2);   
           })) 
    
         let option = {    
