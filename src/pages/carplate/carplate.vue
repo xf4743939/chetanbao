@@ -50,9 +50,11 @@ export default {
                   let res= await updateCarBLInfoByMe(data)
                     if(res && res.success){ 
                            this.$store.state.userInfo.carNo=carNoText.toUpperCase();
-                            wx.reLaunch({
-                                  url:'/pages/mydetail/detail'
-                               })                      
+                           setTimeout(() => {
+                                wx.reLaunch({
+                                        url:'/pages/mydetail/detail'
+                                    })     
+                                },300)            
                     }else{
                        
                         this.$mptoast(res.error.message,'error',2000)

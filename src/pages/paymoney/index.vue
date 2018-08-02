@@ -3,7 +3,7 @@
         <detail-modal v-if="isShow" :isSHow="isShow" :payInfo="payInfo" v-on:hideModal="hideModal"></detail-modal>
           <div class="pay_money">
                <div class="pay_sale">
-                   <span>{{ fee }}</span>
+                   <span>{{fee }}</span>
                    <span>元</span>
                </div>
                <div class="pay_real">
@@ -78,7 +78,9 @@ export default {
            zfchecked:false,
            isShow:false,
            gameFeePayType:0,//支付方式
-           payInfo:null //支付的信息传给modal 
+           payInfo:null, //支付的信息传给modal
+           noCar:'',//车牌 
+           addr:'', //地址
         }
     },
     components: {
@@ -90,7 +92,8 @@ export default {
     },
     methods: {
           hideModal(){
-            this.isShow=false;     
+            this.isShow=false;
+            
         },
         changewx(){
           
@@ -109,21 +112,18 @@ export default {
             this.checked=false
         },
         initData(){
-            if(!this.fee){
-             
+       
+            if(!this.fee){    
                 const fee=wx.getStorageSync('fee')
-             
                 if(fee){
                   this.$store.state.fee=fee
                 }
             }
-            if(!this.carNo || this.carNo.length==0){
-                const carNo=wx.getStorageSync('carNo')   
-                if(carNo){
-                     this.$store.state.carNo=carNo  
-                }else{
-                    this.$store.state.carNo=this.userInfo.carNo
-                }
+            if(this.userInfo && this.userInfo.carNo){
+                this.noCar=this.userInfo.carNo
+            }else{
+                 const number=wx.getStorageSync('carNo');
+                 this.noCar=number
             }
               if(!this.schem){
                 const schem=wx.getStorageSync('schem')
@@ -131,12 +131,15 @@ export default {
                      this.$store.state.schem=schem
                 }
             }
-              if(!this.address && this.address.length==0){
+            
                 const address=wx.getStorageSync('address')
                 if(address){
-                     this.$store.state.address=address         
+                    this.addr=address  
+                }else{
+                    this.addr=''
                 }
-            }
+                console.log(this.address)
+        
               if(!this.gameFeeChoiceType){
                 const gameFeeChoiceType=wx.getStorageSync('choiceType')
                 if(gameFeeChoiceType){
@@ -158,8 +161,8 @@ export default {
                 schem:that.schem,
                 fee:that.fee,
                 gameFeeChoiceType:that.gameFeeChoiceType,
-                address:that.address,
-                carNo:that.carNo.toUpperCase(),
+                address:that.addr,
+                carNo:that.noCar.toUpperCase(),
                 gameFeePayType:that.gameFeePayType
             }
             this.isShow=true

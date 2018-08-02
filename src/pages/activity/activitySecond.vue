@@ -21,19 +21,45 @@
 
 import { gameListType} from '../../utils/constant'
 import {mapState,mapMutations} from 'vuex'
-
+import { getCurrentLoginInfo} from '../../utils/api'
 export default {
     data(){
         return{
             btnTxt:'我要参加',
-            disabled:false
+            disabled:false,
+            userInfo:null,
         }
     },
     computed:{
-      ...mapState(['isLogin','userInfo','type'])  
+      ...mapState(['isLogin','type'])  
     },
     methods: {
         ...mapMutations(['UPDATETYPE']),
+     async getCurrentLoginInfo(){
+       
+             let res = await getCurrentLoginInfo()
+                if(res && res.success){
+                    this.userInfo=res.result;  
+                   
+                   
+                        if(this.userInfo && this.userInfo.gameListType==2){
+                            this.disabled=true
+                            this.btnTxt='已参加'
+                        }else{
+                            this.disabled=false
+                            this.btnTxt='我要参加'
+                        }
+                    this.$store.commit('SAVEUSERINFO',userInfo)            
+                }else {
+                    wx.showToast({
+                    title:res.error.message,
+                    icon:'none',
+                    duration: 2000
+                    })
+                }
+         
+        
+     },
         join(){  
             if(this.disabled){
                 return ;
@@ -49,17 +75,10 @@ export default {
                  }
              }
         },
-          getData(){
-             if(this.isLogin){
-                 if(this.userInfo && this.userInfo.gameListType==gameListType.two){
-                        this.disabled=true
-                        this.btnTxt='已参加'
-                 }
-             }
-        }
+        
     },
     mounted () {
-        this.getData()
+        this.getCurrentLoginInfo()
     }
 }
 </script>

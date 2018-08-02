@@ -160,9 +160,11 @@ export default {
      },
     goToUrl(info){
         if(info.gameListType==2 || info.gameListType==1){
-           wx.reLaunch({
-             url:'/pages/mydetail/detail'
-           })
+            setTimeout(() => {
+                          wx.reLaunch({
+                                  url:'/pages/mydetail/detail'
+                               })     
+                        },300)
         }else{
             this.$router.push({path:'/pages/home/home'})
         }

@@ -38,27 +38,28 @@ request.interceptors.request.use((request) => {
               url:'/pages/login/login'
             })
             break;
-           case 403 :
+           case 403 :     
            wx.showToast({
             title:'你的账号已在其它的设备上登录',
             icon:'none',
             duration:2000,
-            success:function(){       
+            success:function(){  
+               wx.clearStorageSync();     
                wx.redirectTo({
                  url:'/pages/login/login'
                })
             },
             fail:function(){
-              
+              wx.clearStorageSync()
             }
           })    
            wx.clearStorageSync()
            break;
            case 404 :
-           wx.removeStorageSync('authToken')
-           wx.removeStorageSync('userInfo')
+           wx.clearStorageSync();   
            break;
            default:
+           wx.clearStorageSync();   
            wx.showToast({title:'连接错误'})
         }
       }else{

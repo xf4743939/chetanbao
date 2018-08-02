@@ -69,9 +69,9 @@ export default {
              this.payInfo.wxtradeType=1
              this.payInfo.scode=that.code
              let data=this.payInfo
-         
+  
             let res= await applyGameTwo(data)
-     console.log(res)
+         
             if(res && res.success){
                 let data=JSON.parse(res.result);
                 let appid=appId
@@ -83,29 +83,23 @@ export default {
                 const str=`appId=${appid}&nonceStr=${nonceStr}&package=prepay_id=${data.prepayid}&signType=MD5&timeStamp=${timestamp}&key=${keys}`
                
                 let paysign=md5(str).toUpperCase()    
-                
+     
                 wx.requestPayment({
                     'timeStamp':timestamp,
                     'nonceStr': nonceStr,
                     'package': packages,
                     'signType': 'MD5',
-                    'paySign':paysign,
-                     
+                    'paySign':paysign,       
                     'success':function(res){
-                
-                         that.hideModal()
-                         wx.reLaunch({
+                        setTimeout( () => {
+                          wx.reLaunch({
                                   url:'/pages/mydetail/detail'
-                            })      
-                          
+                               })     
+                        },300)
+
                     },
-                    'fail':function(res){     
-                        console.log(res)           
-                         wx.showToast({
-                            title:res.errMsg,
-                            icon:'none',
-                            duration:2000,
-                            })
+                    'fail':function(res){    
+                            
                             that.hideModal()
                      },        
                     })

@@ -98,10 +98,11 @@ export default {
     data(){
         return{
            nextDay:0,
+           userInfo:null,
         }
     },
     computed: {
-      ...mapState(['userInfo'])  
+    //   ...mapState(['userInfo'])  
     },
     methods: {
         filters(userInfo){
@@ -164,7 +165,7 @@ export default {
        async getCurrentLoginInfo(){
            let res=await getCurrentLoginInfo()
            if(res && res.success){
-            //    this.userInfo=res.result
+                this.userInfo=res.result
                 this.filters(this.userInfo)
                this.$store.commit(SAVEUSERINFO,res.result) 
            }else{
@@ -172,11 +173,8 @@ export default {
            }
        }
     },
-    mounted () {  
-         if(!this.userInfo || Object.keys(this.userInfo).length==0){
+    mounted () {       
              this.getCurrentLoginInfo()
-         }
-    
     }
 }
 </script>

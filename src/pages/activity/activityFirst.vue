@@ -14,7 +14,7 @@
                     </p>
            </div>
        </div>
-       <div class="btn_wrap">
+       <div class="btn_wrap" >
            <button class="btn1" :class="{ 'active' : !disabled }"  @click="join">{{btnTxt}}</button>
        </div>
     </div>
@@ -22,19 +22,47 @@
 <script>
 import { gameListType} from '../../utils/constant'
 import {mapState,mapMutations} from 'vuex'
+import { getCurrentLoginInfo} from '../../utils/api'
 export default {
     data(){
         return{
             btnTxt:'我要参加',
-            disabled:false
+            disabled:false,
+            userInfo:null,
         }
     },
     computed: {
-      ...mapState(['isLogin','userInfo',])  
+      ...mapState(['isLogin'])  
     },
     methods: {
       ...mapMutations(['UPDATETYPE']),
-      
+      async getCurrentLoginInfo(){
+        
+                let res = await getCurrentLoginInfo()
+                if(res && res.success){
+                 
+                    this.userInfo=res.result;    
+                 
+                        if(this.userInfo && this.userInfo.gameListType==2){
+                            this.disabled=true
+                            this.btnTxt='已参加活动二，不能再参加此活动'
+                        }else if(this.userInfo && this.userInfo.gameListType==1){
+                            this.disabled=true
+                            this.btnTxt='已参加'
+                        }else {
+                            this.disabled=false;
+                            this.btnTxt="我要参加"
+                        }
+                    this.$store.commit('SAVEUSERINFO',userInfo)            
+                }else {
+                    wx.showToast({
+                    title:res.error.message,
+                    icon:'none',
+                    duration: 2000
+                    })
+                }
+           
+     },
         join(){ 
                if(this.disabled){
                 return ;
@@ -44,29 +72,21 @@ export default {
                   this.$router.push({path:'/pages/login/login'})
                }else{
                  if(this.userInfo && this.userInfo.carNo && this.userInfo.carNo.length){
-                     wx.reLaunch({
+                      setTimeout( () => {
+                          wx.reLaunch({
                                   url:'/pages/mydetail/detail'
-                             })     
+                               })     
+                        },300)
                  }else{
                      this.$router.push({path:'/pages/carplate/carplate'}) 
                  }
                  
                }
         },
-        getData(){
-             if(this.isLogin){
-                 if(this.userInfo && this.userInfo.gameListType==gameListType.two){
-                       this.disabled=true
-                      this.btnTxt='已参加活动二，不能再参加此活动'
-                 }else if(this.userInfo && this.userInfo.gameListType==gameListType.one){
-                      this.disabled=true
-                      this.btnTxt='已参加'
-                 }
-             }
-        }
+      
     },
     mounted () {   
-        this.getData()
+      this.getCurrentLoginInfo()
     }
 }
 </script>

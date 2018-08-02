@@ -10,10 +10,8 @@ export default {
          this.$store.commit('LOGINSTATUS',false);
          wx.clearStorageSync()
       }else{
-          this.$store.commit('LOGINSTATUS',true);
-            if(!this.userInfo){                 
-                this.getUserInfo()         
-            }               
+          this.$store.commit('LOGINSTATUS',true);                
+          this.getUserInfo()                             
       }  
   },
   computed: {
@@ -37,9 +35,11 @@ export default {
      },
      goToUrl(info){
         if(info.gameListType==2 || info.gameListType==1){
-           wx.reLaunch({
-             url:'/pages/mydetail/detail'
-           })
+            setTimeout( () => {
+                          wx.reLaunch({
+                                  url:'/pages/mydetail/detail'
+                               })     
+                        },200)
         }
      }
   },

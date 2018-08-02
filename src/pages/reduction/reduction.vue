@@ -26,10 +26,11 @@ export default {
     methods: {
         ...mapMutations(['SAVESCHEM']),
         choice(index){
-          
-            this.$router.push({path:'/pages/address/address'})
+            console.log(index)
             this.$store.commit('SAVESCHEM',index)
             wx.setStorageSync('schem',index)
+            this.$router.push({path:'/pages/address/address'})
+        
         }
     }
 }
