@@ -29,7 +29,7 @@ const store = new Vuex.Store({
         state.isLogin=status
      },
      [SAVEUSERINFO](state,info){  
-   
+  
        if(!state.isLogin){
          return
        }

@@ -1,5 +1,5 @@
 <template>
-    <div class="pay_container page_Wrap">
+    <div class="pay_container page_Wrap" v-if="fee>0">
           <div class="pay_money">
                <div class="pay_sale">
                    <span>{{fee}}</span>

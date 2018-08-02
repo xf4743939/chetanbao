@@ -2,6 +2,9 @@
 //地址
 export const baseUrl="https://www.chetanlian.com";
 
+//小程序appid
+export const appId='wx8a8a747c405bc03c'
+
 export const gameListType={
    no:0, //没有活动
    one:1, //活动一

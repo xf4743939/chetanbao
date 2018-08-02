@@ -39,13 +39,15 @@
 </template>
 <script>
 import { applyGameTwo } from '../utils/api'
+import { appId} from '../utils/constant'
 const md5=require('md5')
 
 export default {
     data(){
         return{
             showModal:false,
-            title:"活动二详情"
+            title:"活动二详情",
+            code:'',
         }
     },
 
@@ -65,38 +67,40 @@ export default {
         async payMoney(){
             const that=this;
              this.payInfo.wxtradeType=1
+             this.payInfo.scode=that.code
              let data=this.payInfo
-            
+         
             let res= await applyGameTwo(data)
-        
+     console.log(res)
             if(res && res.success){
                 let data=JSON.parse(res.result);
-                let appid=data.appid
+                let appid=appId
                 let timestamp=''+ data.timestamp
                 let nonceStr=  data.noncestr
                 let packages='prepay_id='+ data.prepayid
-                let keys="gS8NoVGODkOCtuEisN8ZmN6qeSbSF4y9";
-                const str=`appid=${appid}&nonceStr=${nonceStr}&package=prepay_id=${data.prepay_id}&signType=MD5&timeStamp${timestamp}&key=${keys}`
+                let keys="gS8NoVGODkOCtuEisN8ZmN6qeSbSF4y9"; //商户支付密钥
+             
+                const str=`appId=${appid}&nonceStr=${nonceStr}&package=prepay_id=${data.prepayid}&signType=MD5&timeStamp=${timestamp}&key=${keys}`
+               
                 let paysign=md5(str).toUpperCase()    
-                console.log(data.sign,'返回') 
-                console.log(paysign,'wode')          
+                
                 wx.requestPayment({
                     'timeStamp':timestamp,
                     'nonceStr': nonceStr,
                     'package': packages,
                     'signType': 'MD5',
                     'paySign':paysign,
-
+                     
                     'success':function(res){
-                       
-                        wx.showToast({
-                            title:'支付成功',
-                            icon:'none',
-                            duration:2000,
-                            })
-                            that.hideModal()
+                
+                         that.hideModal()
+                         wx.reLaunch({
+                                  url:'/pages/mydetail/detail'
+                            })      
+                          
                     },
-                    'fail':function(res){                
+                    'fail':function(res){     
+                        console.log(res)           
                          wx.showToast({
                             title:res.errMsg,
                             icon:'none',
@@ -105,14 +109,9 @@ export default {
                             that.hideModal()
                      },        
                     })
-               
-                // this.hideModal()
-                // wx.reLaunch({
-                //     url:'/pages/mydetail/detail'
-                // })
-            
             }else{
-                that.hideModal()
+        
+              that.hideModal()
                wx.showToast({
                    title:res.error.message,
                    icon:'none',
@@ -123,7 +122,17 @@ export default {
         }   
     },
     mounted () {
-        console.log(this.payInfo)
+        const that=this;
+       wx.login({
+           success:function(res){
+               if(res.code){
+                  
+                  that.code=res.code
+               }  else{
+                   console.log('登录失败！' + res.errMsg)
+               }
+           }
+       })
     }
 }
 </script>

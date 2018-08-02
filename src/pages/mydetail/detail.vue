@@ -1,5 +1,5 @@
 <template>
-    <div class="detail_wrap ">  
+    <div class="detail_wrap " v-if="userInfo">  
   
         <div class="detail_bd">     
               <img src="../../../static/images/detail_bd.png" >
@@ -77,7 +77,7 @@
                             <p>设备激活需在车碳宝APP上进行</p>
                        </div>         
              </div> 
-            <div class="footer_container" v-if="userInfo && userInfo.gameListType==2 && userInfo.wifiStatus==wifiStatus.Activate_Normal">
+            <div class="footer_container" v-if="userInfo && userInfo.gameListType==2 && userInfo.wifiStatus==2">
                        <div>
                           <img style="width:56px;" src="../../../static/images/wify_active.png" >
                        </div>
@@ -98,9 +98,10 @@ export default {
     data(){
         return{
            nextDay:0,
-           wifiStatus:wifiStatus,
-           userInfo:null,      
         }
+    },
+    computed: {
+      ...mapState(['userInfo'])  
     },
     methods: {
         filters(userInfo){
@@ -163,7 +164,7 @@ export default {
        async getCurrentLoginInfo(){
            let res=await getCurrentLoginInfo()
            if(res && res.success){
-               this.userInfo=res.result
+            //    this.userInfo=res.result
                 this.filters(this.userInfo)
                this.$store.commit(SAVEUSERINFO,res.result) 
            }else{
@@ -172,7 +173,10 @@ export default {
        }
     },
     mounted () {  
-      this.getCurrentLoginInfo()
+         if(!this.userInfo || Object.keys(this.userInfo).length==0){
+             this.getCurrentLoginInfo()
+         }
+    
     }
 }
 </script>
@@ -222,10 +226,10 @@ export default {
             z-index: 99;
             background: #fff;
             border-radius: 16rpx;
-            box-shadow:0px 0px 0px 0 #fff,
-            -2px 0px 3px 0px #efefef,
-            2px 0px 3px 0px #efefef,
-            0px 3px 3px 0px #efefef;
+            box-shadow:-1px 0px 0px 0px #fff ,
+            -2px 0px 0px 0px #efefef,
+            2px 0px 0px 0px #efefef,
+            0px 2px 0px 0px #efefef;
             .info_item{
                  flex: 1;
                  text-align:center;      
@@ -266,8 +270,9 @@ export default {
             }         
         }
         .detail_banner{
-            position: relative;
-            top: -84rpx;
+            position: absolute;
+            bottom: 190rpx;
+            width: 100%;
             img{
                 width: 100%;
                 height: 90px;
