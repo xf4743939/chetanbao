@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { GETPROVINCE,GETCITY,LOGINSTATUS,SAVEUSERINFO,
-  SAVECARNO,SAVESCHEM,SAVEADDRESS,SAVECHOICETYPE,UPDATETYPE} from './mutation-type'
+  SAVECARNO,SAVETYPE,SAVEADDRESS,SAVECHOICETYPE,UPDATETYPE,SAVEFEE} from './mutation-type'
 import {getCurrentLoginInfo} from '../../src/utils/api'
 
 Vue.use(Vuex)
@@ -15,7 +15,7 @@ const store = new Vuex.Store({
      isLogin:false,
      userInfo:null,
      carNo:'', //车牌号
-     schem:0, //减排计算方式 按里程 按停驶 0.还没有参加活动 1.按里程计算 2.按停驶天数
+     equipmentType:0, //选择设备0.未知 1.2g设备 2.4g设备
      fee:0,//押金金额
      gameFeePayType:0, //押金支付方式 0.不用支付 1.微信支付 2.支付宝支付
      address:'', //设备邮寄地址
@@ -39,8 +39,9 @@ const store = new Vuex.Store({
      [SAVECARNO](state,carNo){
         state.carNo=carNo
      },
-     [SAVESCHEM](state,index){
-       state.schem=index
+     [SAVETYPE](state,index){
+   
+       state.equipmentType=index
      },
      [SAVEADDRESS](state,address){
        state.address=address
@@ -51,6 +52,9 @@ const store = new Vuex.Store({
      },
      [UPDATETYPE](state,type){
        state.type=type
+     },
+     [SAVEFEE](state,val){
+       state.fee=val
      }
   },
   actions:{

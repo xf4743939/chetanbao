@@ -30,7 +30,7 @@ export default {
            }
            this.$store.commit('SAVEADDRESS',this.addr)
            wx.setStorageSync('address',this.addr)
-           this.$router.push({path:'/pages/choicetype/choicetype'})
+           this.$router.push({path:'/pages/paymoney/index'})
 
        }
    },

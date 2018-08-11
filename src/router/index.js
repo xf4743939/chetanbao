@@ -113,7 +113,7 @@ module.exports = [
     path:'/pages/reduction/reduction',
     name:'reduction',
     config:{
-      navigationBarTitleText:'选择减排计算方式'
+      navigationBarTitleText:'选择设备'
     }
   },
   {

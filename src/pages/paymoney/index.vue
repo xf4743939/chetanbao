@@ -34,7 +34,7 @@
                   </div>
                   
               </div>
-              <div class="pay_item">
+              <div class="pay_item" v-if="false">
                   <div class="pay_name">
                       <img src="../../../static/images/zhifubao.png">
                      <span>支付宝支付</span>
@@ -69,6 +69,7 @@
 </template>
 <script>
 import { mapState,mapMutations } from 'vuex'
+import { getGameTwoFee} from '../../utils/api'
 import detailModal from '../../components/detailModal'
 import mptoast from 'mptoast'
 export default {
@@ -81,6 +82,7 @@ export default {
            payInfo:null, //支付的信息传给modal
            noCar:'',//车牌 
            addr:'', //地址
+         
         }
     },
     components: {
@@ -88,7 +90,7 @@ export default {
         detailModal
     },
     computed: {
-      ...mapState(['fee','carNo','schem','address','gameFeeChoiceType','userInfo'])  
+      ...mapState(['fee','carNo','address','userInfo','equipmentType'])  
     },
     methods: {
           hideModal(){
@@ -125,27 +127,18 @@ export default {
                  const number=wx.getStorageSync('carNo');
                  this.noCar=number
             }
-              if(!this.schem){
-                const schem=wx.getStorageSync('schem')
-                if(schem){
-                     this.$store.state.schem=schem
+            if(!this.equipmentType){
+                const equipmentType=wx.getStorageSync('equipmentType');
+                if(equipmentType){
+                     this.$store.state.equipmentType=equipmentType
                 }
             }
-            
-                const address=wx.getStorageSync('address')
+            const address=wx.getStorageSync('address')
                 if(address){
                     this.addr=address  
                 }else{
                     this.addr=''
                 }
-                console.log(this.address)
-        
-              if(!this.gameFeeChoiceType){
-                const gameFeeChoiceType=wx.getStorageSync('choiceType')
-                if(gameFeeChoiceType){
-                     this.$store.state.gameFeeChoiceType=gameFeeChoiceType
-                }
-            }
           
         },
         confirm(){
@@ -160,13 +153,22 @@ export default {
             this.payInfo={
                 schem:that.schem,
                 fee:that.fee,
-                gameFeeChoiceType:that.gameFeeChoiceType,
                 address:that.addr,
                 carNo:that.noCar.toUpperCase(),
-                gameFeePayType:that.gameFeePayType
+                gameFeePayType:that.gameFeePayType,
+                equipmentType:that.equipmentType
             }
             this.isShow=true
-        }
+        },
+        //   async getGameTwoFee(){
+        //         let res= await getGameTwoFee()
+        //         console.log(res)
+        //         if(res && res.success){
+        //             this.fee=res.result
+        //         }else{
+        //             this.$mptoast(res.error.message,'none',2000)
+        //         }
+        // }
     },
     mounted () {
         this.initData()      

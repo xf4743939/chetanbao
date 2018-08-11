@@ -7,7 +7,6 @@ request.config.baseURL=baseUrl
 request.config.timeout=5000
 
 request.interceptors.request.use((request) => {
-     console.log(`发起请求：path:${request.url}，baseURL:${request.baseURL}`)
      
         const csrfToken=wx.getStorageSync('authToken')
     
@@ -34,9 +33,9 @@ request.interceptors.request.use((request) => {
      
           case 401 :
              wx.clearStorageSync()
-             wx.redirectTo({
-              url:'/pages/login/login'
-            })
+            //  wx.redirectTo({
+            //   url:'/pages/login/login'
+            // })
             break;
            case 403 :     
            wx.showToast({

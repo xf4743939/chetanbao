@@ -18,3 +18,7 @@ export const SAVEADDRESS='SAVEADDRESS'
 export const SAVECHOICETYPE='SAVECHOICETYPE'
 
 export const UPDATETYPE='UPDATETYPE'
+
+export const SAVEFEE='SAVEFEE'
+
+export const SAVETYPE='SAVETYPE'

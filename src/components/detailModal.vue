@@ -10,15 +10,15 @@
                 </div>
                 <div class="item">
                     <span>减排计算方式</span>
-                    <span class="item_val">{{ payInfo.schem==1 ? '按里程计算' : '按停驶天数计算' }}</span>
+                    <span class="item_val">按小时计算</span>
                 </div>
                 <div class="item">
                     <span>设备邮寄地址</span>
                     <span class="item_val " id="item_address">{{ payInfo.address }}</span>
                 </div>
                 <div class="item">
-                    <span>押金提交方式</span>
-                    <span class="item_val">{{ payInfo.gameFeeChoiceType==1 ? '自费' : '租赁贷' }}</span>
+                    <span>设备类型</span>
+                    <span class="item_val">{{ payInfo.equipmentType==1 ? '2G设备' : '4G设备' }}</span>
                 </div>
                 <div class="item">
                     <span>押金付款方式</span>
@@ -98,13 +98,17 @@ export default {
                         },300)
 
                     },
-                    'fail':function(res){    
-                            
-                            that.hideModal()
+                    'fail':function(res){ 
+                        //  wx.removeStorageSync('schem');
+                        //  wx.removeStorageSync('address');
+                        //   wx.removeStorageSync('choiceType');      
+                         that.hideModal()
                      },        
                     })
             }else{
-        
+                        //  wx.removeStorageSync('schem');
+                        //  wx.removeStorageSync('address');
+                        //  wx.removeStorageSync('choiceType');      
               that.hideModal()
                wx.showToast({
                    title:res.error.message,
