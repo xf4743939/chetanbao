@@ -17,4 +17,5 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 ```
+1.mpvue + fly 开发微信小程序
 4.微信小程序支付问题
